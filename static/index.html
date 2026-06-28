@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Behavior Prediction Engine Dashboard</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="glow-backdrop"></div>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-brain-circuit text-gradient"></i>
+                </div>
+                <div>
+                    <h1 class="text-gradient">AI Behavior Prediction Engine</h1>
+                    <p class="subtitle">Real-Time User Action Forecasting (RTRP Platform)</p>
+                </div>
+            </div>
+            
+            <!-- Navigation Tabs in Header -->
+            <nav class="nav-tabs">
+                <button class="tab-btn active" data-tab="tab-sandbox">
+                    <i class="fa-solid fa-gamepad"></i> Event Sandbox
+                </button>
+                <button class="tab-btn" data-tab="tab-telemetry">
+                    <i class="fa-solid fa-gauge-high"></i> Telemetry &amp; Training
+                </button>
+                <button class="tab-btn" data-tab="tab-guide">
+                    <i class="fa-solid fa-circle-info"></i> How It Works
+                </button>
+            </nav>
+
+            <div class="header-status">
+                <div class="status-pill status-online" id="api-status-pill">
+                    <span class="pulse-dot"></span>
+                    <span id="api-status-text">Connecting to API...</span>
+                </div>
+                <button class="btn btn-icon" id="btn-refresh-status" title="Refresh Telemetry">
+                    <i class="fa-solid fa-rotate"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Dashboard View -->
+        <main class="dashboard-main-content">
+            
+            <!-- Tab Pane 1: Interactive Sandbox -->
+            <div class="tab-pane active" id="tab-sandbox">
+                <div class="sandbox-layout">
+                    
+                    <!-- Sandbox Left Column: Control Panel -->
+                    <section class="dashboard-card card-simulator">
+                        <div class="card-header">
+                            <h2><i class="fa-solid fa-gamepad"></i> Simulated Interaction Controller</h2>
+                            <span class="badge accent-badge">Active Sandbox</span>
+                        </div>
+                        <div class="card-body">
+                            <!-- User Profile Selector -->
+                            <div class="form-group">
+                                <label for="user-selector">Target User ID</label>
+                                <div class="input-action-group">
+                                    <select id="user-selector">
+                                        <option value="test_user_1">test_user_1</option>
+                                        <option value="shopper_alice">shopper_alice (Simulated)</option>
+                                        <option value="browser_bob">browser_bob (Simulated)</option>
+                                        <option value="supporter_charlie">supporter_charlie (Simulated)</option>
+                                    </select>
+                                    <button class="btn btn-secondary" id="btn-new-user" title="Generate New User ID">
+                                        <i class="fa-solid fa-user-plus"></i> New User
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Preset Events Trigger -->
+                            <div class="preset-triggers">
+                                <h3>Ingest User Action</h3>
+                                <p class="section-help">Clicking a button feeds this action into the user's history sequence.</p>
+                                <div class="preset-grid">
+                                    <button class="btn btn-preset" data-action="login">
+                                        <i class="fa-solid fa-right-to-bracket text-blue"></i> login
+                                    </button>
+                                    <button class="btn btn-preset" data-action="search">
+                                        <i class="fa-solid fa-magnifying-glass text-yellow"></i> search
+                                    </button>
+                                    <button class="btn btn-preset" data-action="view_item">
+                                        <i class="fa-solid fa-eye text-cyan"></i> view_item
+                                    </button>
+                                    <button class="btn btn-preset" data-action="add_to_cart">
+                                        <i class="fa-solid fa-cart-plus text-green"></i> add_to_cart
+                                    </button>
+                                    <button class="btn btn-preset" data-action="remove_from_cart">
+                                        <i class="fa-solid fa-cart-arrow-down text-red"></i> remove
+                                    </button>
+                                    <button class="btn btn-preset" data-action="view_reviews">
+                                        <i class="fa-solid fa-star text-orange"></i> view_reviews
+                                    </button>
+                                    <button class="btn btn-preset" data-action="checkout">
+                                        <i class="fa-solid fa-credit-card text-purple"></i> checkout
+                                    </button>
+                                    <button class="btn btn-preset" data-action="contact_support">
+                                        <i class="fa-solid fa-headset text-indigo"></i> support
+                                    </button>
+                                    <button class="btn btn-preset" data-action="logout">
+                                        <i class="fa-solid fa-right-from-bracket text-muted"></i> logout
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Custom Event Form -->
+                            <div class="custom-event-section">
+                                <h3>Custom Action Ingester</h3>
+                                <form id="custom-event-form">
+                                    <div class="input-action-group">
+                                        <input type="text" id="custom-action-input" placeholder="e.g. apply_coupon, share_item" required>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fa-solid fa-paper-plane"></i> Send
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Live Event Stream Feed -->
+                            <div class="event-stream-section">
+                                <h3>Session Event Feed</h3>
+                                <div class="stream-feed-wrapper" id="stream-feed-wrapper">
+                                    <div class="empty-feed-placeholder" id="empty-feed-placeholder">
+                                        <i class="fa-solid fa-stream-slash"></i>
+                                        <p>No activity logged. Trigger events to see event streams.</p>
+                                    </div>
+                                    <ul class="stream-feed-list" id="stream-feed-list"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Sandbox Right Column: Real-Time Predictions -->
+                    <section class="dashboard-card card-predictions">
+                        <div class="card-header">
+                            <h2><i class="fa-solid fa-wand-magic-sparkles text-gradient"></i> AI Prediction Dashboard</h2>
+                            <span class="badge prediction-badge">Real-Time</span>
+                        </div>
+                        <div class="card-body">
+                            <!-- User Sequence Timeline -->
+                            <div class="timeline-container">
+                                <h3>Active Behavioral Sequence</h3>
+                                <div class="sequence-timeline" id="sequence-timeline">
+                                    <div class="empty-timeline-placeholder" id="empty-timeline-placeholder">
+                                        <i class="fa-solid fa-history"></i>
+                                        <p>Timeline empty. Ingest events for the target user above.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Predictions Output -->
+                            <div class="predictions-container">
+                                <div class="predict-header-row">
+                                    <h3>Next Action Probability Forecast</h3>
+                                    <button class="btn btn-sm btn-icon" id="btn-force-predict" title="Re-fetch predictions">
+                                        <i class="fa-solid fa-sync"></i>
+                                    </button>
+                                </div>
+                                <div class="predictions-wrapper" id="predictions-wrapper">
+                                    <div class="empty-predictions-placeholder" id="empty-predictions-placeholder">
+                                        <i class="fa-solid fa-chart-line"></i>
+                                        <p>Build user history timeline to display RNN forecasting charts.</p>
+                                    </div>
+                                    <div class="predictions-list" id="predictions-list" style="display: none;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Tab Pane 2: Telemetry & Model Admin -->
+            <div class="tab-pane" id="tab-telemetry">
+                <div class="telemetry-layout">
+                    
+                    <!-- Telemetry Left Column: Model Specs -->
+                    <section class="dashboard-card card-telemetry">
+                        <div class="card-header">
+                            <h2><i class="fa-solid fa-microchip"></i> Model Configuration</h2>
+                            <span class="badge">LSTM Network</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="stats-grid">
+                                <div class="stat-box">
+                                    <span class="stat-label">Model Weights File</span>
+                                    <span class="stat-value" id="model-loaded-val">--</span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-label">Active Profiles</span>
+                                    <span class="stat-value" id="active-users-val">--</span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-label">Total Logs Ingested</span>
+                                    <span class="stat-value" id="total-events-val">--</span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-label">File Weight</span>
+                                    <span class="stat-value" id="weight-size-val">--</span>
+                                </div>
+                            </div>
+
+                            <div class="collapsible-section">
+                                <h3>Network Hyperparameters</h3>
+                                <table class="config-table">
+                                    <tr><td>Embedding Size:</td><td id="cfg-embedding" class="table-val">--</td></tr>
+                                    <tr><td>LSTM Hidden Dimension:</td><td id="cfg-hidden" class="table-val">--</td></tr>
+                                    <tr><td>Network Layer Depth:</td><td id="cfg-layers" class="table-val">--</td></tr>
+                                    <tr><td>Maximum Seq Memory:</td><td id="cfg-seq-len" class="table-val">--</td></tr>
+                                    <tr><td>Weight File Modified:</td><td id="cfg-modified" class="table-val select-all">--</td></tr>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Telemetry Right Column: Operations Console -->
+                    <section class="dashboard-card card-operations">
+                        <div class="card-header">
+                            <h2><i class="fa-solid fa-screwdriver-wrench"></i> Interactive Operations</h2>
+                            <span class="badge accent-badge">Controls</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="actions-section">
+                                <h3>Training Sandbox Actions</h3>
+                                <p class="section-help">You can populate the model database with standard patterns and run the training cycle.</p>
+                                <div class="btn-group">
+                                    <button class="btn btn-secondary" id="btn-simulate">
+                                        <i class="fa-solid fa-database"></i> Batch Simulate Shoppers
+                                    </button>
+                                    <button class="btn btn-primary" id="btn-train">
+                                        <i class="fa-solid fa-dumbbell"></i> Fit LSTM Model
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Live Training Console -->
+                            <div class="console-section-wrapper">
+                                <h3>System Operations Logger</h3>
+                                <div class="console-wrapper">
+                                    <div class="console-header">
+                                        <span><i class="fa-solid fa-terminal"></i> Terminal Logs</span>
+                                        <button class="btn-clear-console" id="btn-clear-console" title="Clear Console">Clear</button>
+                                    </div>
+                                    <pre class="console-output" id="console-output">SYSTEM: Operations tab active. Waiting for training command...
+Suggestion: Click "Batch Simulate Shoppers" to fill profiles, then click "Fit LSTM Model".</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Tab Pane 3: How It Works Guide -->
+            <div class="tab-pane" id="tab-guide">
+                <section class="dashboard-card card-guide">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-circle-info text-gradient"></i> AI Behavior Prediction Platform Guide</h2>
+                        <span class="badge prediction-badge">Tutorial</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="guide-container">
+                            <div class="guide-intro">
+                                <h3>Welcome to the Real-Time Recommendation Platform (RTRP)</h3>
+                                <p>This dashboard is a live playground demonstrating how recurrent neural networks (RNNs) forecast sequences of user actions in real-time. By observing patterns, the system calculates the likelihood of subsequent actions.</p>
+                            </div>
+
+                            <div class="guide-grid">
+                                <div class="guide-card">
+                                    <div class="guide-card-icon text-blue">
+                                        <i class="fa-solid fa-user-gear"></i>
+                                    </div>
+                                    <h4>1. Choose a Profile</h4>
+                                    <p>Select an active User ID from the dropdown or click <b>"New User"</b>. You can act on behalf of this user in the simulator.</p>
+                                </div>
+
+                                <div class="guide-card">
+                                    <div class="guide-card-icon text-cyan">
+                                        <i class="fa-solid fa-input-numeric"></i>
+                                    </div>
+                                    <h4>2. Ingest Actions</h4>
+                                    <p>Click preset buttons (like <b>login</b>, <b>add_to_cart</b>) or type custom events. Every action updates the user history sequence.</p>
+                                </div>
+
+                                <div class="guide-card">
+                                    <div class="guide-card-icon text-purple">
+                                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                    </div>
+                                    <h4>3. View Predictions</h4>
+                                    <p>Watch the <b>AI Prediction Dashboard</b>. The LSTM updates and displays the top 3 predicted next actions with percentage bars.</p>
+                                </div>
+
+                                <div class="guide-card">
+                                    <div class="guide-card-icon text-green">
+                                        <i class="fa-solid fa-dumbbell"></i>
+                                    </div>
+                                    <h4>4. Train the Model</h4>
+                                    <p>Go to the <b>Telemetry &amp; Training</b> tab. Click <b>"Batch Simulate"</b> to load data, then click <b>"Fit LSTM Model"</b> to train the neural network live.</p>
+                                </div>
+                            </div>
+
+                            <div class="guide-details">
+                                <h3>How the Model Works Under the Hood</h3>
+                                <div class="explanation-box">
+                                    <p><strong>Recurrent Sequence Processing (LSTM):</strong> Unlike standard classifiers, the neural network uses a Long Short-Term Memory (LSTM) cell. When a sequence is processed, each event type is hashed into an index and mapped to a dense embedding. The LSTM steps through this embedding sequence, updating its internal <em>hidden state</em>. The final state vectors represent the entire context of user behavior, which are passed to a Linear layer predicting the next activity.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+        </main>
+        
+        <footer class="app-footer-info">
+            <p>AI Behavior Prediction Engine &bull; Designed &amp; Crafted for visual excellence &bull; FastAPI + PyTorch LSTM</p>
+        </footer>
+    </div>
+
+    <!-- Script -->
+    <script src="/static/app.js"></script>
+</body>
+</html>
