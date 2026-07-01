@@ -10,27 +10,59 @@ import contextlib
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
-# Defined mock sequences representing typical shopping behaviors
-MOCK_PATTERNS = {
-    "shopper_alice": ["login", "search", "view_item", "add_to_cart", "view_item", "add_to_cart", "checkout", "logout"],
-    "browser_bob": ["login", "view_item", "view_item", "search", "view_item", "logout"],
-    "supporter_charlie": ["login", "view_item", "contact_support", "view_item", "contact_support", "logout"],
-    "shopper_david": ["login", "view_item", "add_to_cart", "checkout"],
-    "browser_emily": ["login", "search", "view_item", "search", "view_item", "search", "logout"]
+# Defined mock sequences representing different application domains
+DOMAIN_PRESETS = {
+    "saas": {
+        "dev_alice": ["login", "view_dashboard", "create_project", "configure_api", "deploy_service", "view_logs", "logout"],
+        "admin_bob": ["login", "view_dashboard", "invite_member", "view_dashboard", "upgrade_billing", "logout"],
+        "guest_charlie": ["login", "view_dashboard", "view_logs", "logout"],
+        "billing_david": ["login", "view_dashboard", "upgrade_billing", "contact_support", "logout"],
+        "dev_emily": ["login", "view_dashboard", "create_project", "deploy_service", "view_logs", "deploy_service"]
+    },
+    "gaming": {
+        "gamer_greg": ["login", "open_lobby", "join_matchmaker", "start_match", "complete_quest", "complete_quest"],
+        "casual_sam": ["login", "open_settings", "open_lobby", "join_matchmaker", "start_match", "logout"],
+        "social_zoe": ["login", "send_friend_request", "send_friend_request", "open_lobby", "logout"],
+        "whale_will": ["login", "purchase_item", "purchase_item", "open_lobby", "start_match"],
+        "speedrunner_sara": ["login", "open_lobby", "start_match", "complete_quest", "start_match", "complete_quest"]
+    },
+    "media": {
+        "binge_watcher": ["login", "search_content", "play_media", "pause_media", "play_media", "add_to_favorites"],
+        "casual_viewer": ["login", "play_media", "rate_content", "logout"],
+        "curator_dan": ["login", "search_content", "add_to_favorites", "search_content", "add_to_favorites", "share_media"],
+        "subscriber_sue": ["login", "subscribe_channel", "play_media", "share_media", "logout"],
+        "listener_leo": ["login", "search_content", "play_media", "pause_media", "logout"]
+    },
+    "ecommerce": {
+        "shopper_emma": ["login", "search_product", "view_item", "add_to_cart", "checkout_start", "purchase_complete", "logout"],
+        "browser_jack": ["login", "view_item", "view_item", "search_product", "view_item", "logout"],
+        "support_chloe": ["login", "view_item", "contact_support", "view_item", "contact_support", "logout"],
+        "buyer_ben": ["login", "view_item", "add_to_cart", "checkout_start", "purchase_complete"],
+        "reviewer_rose": ["login", "view_item", "view_reviews", "write_review", "logout"]
+    }
 }
 
 @router.post("/simulate")
-def simulate_data():
+def simulate_data(domain: str = "saas"):
     """
-    Seed the application store with predefined user event patterns.
+    Seed the application store with predefined user event patterns for a given domain.
     """
+    domain = domain.lower()
+    if domain not in DOMAIN_PRESETS:
+        domain = "saas"
+        
+    mock_patterns = DOMAIN_PRESETS[domain]
+    
     from core.database import clear_db, add_event_to_db
     try:
         clear_db()
     except Exception as e:
         print(f"Error clearing database: {e}")
         
-    for user, seq in MOCK_PATTERNS.items():
+    # Clear active histories in memory before seeding new ones
+    user_histories.clear()
+        
+    for user, seq in mock_patterns.items():
         user_histories[user] = seq.copy()
         for s in seq:
             # Save simulated event to SQLite
@@ -44,7 +76,7 @@ def simulate_data():
             action_id = (hash_val % (settings.NUM_EVENT_TYPES - 1)) + 1
             event_mapping[action_id] = s
             
-    return {"status": "success", "message": f"Simulated histories for {len(MOCK_PATTERNS)} users."}
+    return {"status": "success", "message": f"Simulated histories for {len(mock_patterns)} users in domain '{domain}'."}
 
 @router.post("/train")
 def train_current_model():

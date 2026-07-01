@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Behavior Prediction Engine Dashboard</title>
+    <title>Manovra | AI Behavior Prediction Console</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,11 +19,11 @@
         <header class="app-header">
             <div class="logo-area">
                 <div class="logo-icon">
-                    <i class="fa-solid fa-brain-circuit text-gradient"></i>
+                    <i class="fa-solid fa-brain text-gradient"></i>
                 </div>
                 <div>
-                    <h1 class="text-gradient">AI Behavior Prediction Engine</h1>
-                    <p class="subtitle">Real-Time User Action Forecasting (RTRP Platform)</p>
+                    <h1 class="text-gradient">Manovra</h1>
+                    <p class="subtitle">Real-Time Multi-Domain Behavior Prediction Engine</p>
                 </div>
             </div>
             
@@ -65,15 +65,35 @@
                             <span class="badge accent-badge">Active Sandbox</span>
                         </div>
                         <div class="card-body">
+                            <!-- Behavioral Domain Preset Selector -->
+                            <div class="form-group">
+                                <label>Behavioral Domain Preset</label>
+                                <div class="domain-selector-grid">
+                                    <button class="domain-btn active" data-domain="saas">
+                                        <i class="fa-solid fa-network-wired text-blue"></i>
+                                        <span>SaaS App</span>
+                                    </button>
+                                    <button class="domain-btn" data-domain="gaming">
+                                        <i class="fa-solid fa-gamepad text-green"></i>
+                                        <span>Gaming</span>
+                                    </button>
+                                    <button class="domain-btn" data-domain="media">
+                                        <i class="fa-solid fa-photo-film text-purple"></i>
+                                        <span>Streaming</span>
+                                    </button>
+                                    <button class="domain-btn" data-domain="ecommerce">
+                                        <i class="fa-solid fa-bag-shopping text-cyan"></i>
+                                        <span>E-Commerce</span>
+                                    </button>
+                                </div>
+                            </div>
+
                             <!-- User Profile Selector -->
                             <div class="form-group">
                                 <label for="user-selector">Target User ID</label>
                                 <div class="input-action-group">
                                     <select id="user-selector">
-                                        <option value="test_user_1">test_user_1</option>
-                                        <option value="shopper_alice">shopper_alice (Simulated)</option>
-                                        <option value="browser_bob">browser_bob (Simulated)</option>
-                                        <option value="supporter_charlie">supporter_charlie (Simulated)</option>
+                                        <!-- Populated dynamically by app.js based on domain -->
                                     </select>
                                     <button class="btn btn-secondary" id="btn-new-user" title="Generate New User ID">
                                         <i class="fa-solid fa-user-plus"></i> New User
@@ -85,34 +105,8 @@
                             <div class="preset-triggers">
                                 <h3>Ingest User Action</h3>
                                 <p class="section-help">Clicking a button feeds this action into the user's history sequence.</p>
-                                <div class="preset-grid">
-                                    <button class="btn btn-preset" data-action="login">
-                                        <i class="fa-solid fa-right-to-bracket text-blue"></i> login
-                                    </button>
-                                    <button class="btn btn-preset" data-action="search">
-                                        <i class="fa-solid fa-magnifying-glass text-yellow"></i> search
-                                    </button>
-                                    <button class="btn btn-preset" data-action="view_item">
-                                        <i class="fa-solid fa-eye text-cyan"></i> view_item
-                                    </button>
-                                    <button class="btn btn-preset" data-action="add_to_cart">
-                                        <i class="fa-solid fa-cart-plus text-green"></i> add_to_cart
-                                    </button>
-                                    <button class="btn btn-preset" data-action="remove_from_cart">
-                                        <i class="fa-solid fa-cart-arrow-down text-red"></i> remove
-                                    </button>
-                                    <button class="btn btn-preset" data-action="view_reviews">
-                                        <i class="fa-solid fa-star text-orange"></i> view_reviews
-                                    </button>
-                                    <button class="btn btn-preset" data-action="checkout">
-                                        <i class="fa-solid fa-credit-card text-purple"></i> checkout
-                                    </button>
-                                    <button class="btn btn-preset" data-action="contact_support">
-                                        <i class="fa-solid fa-headset text-indigo"></i> support
-                                    </button>
-                                    <button class="btn btn-preset" data-action="logout">
-                                        <i class="fa-solid fa-right-from-bracket text-muted"></i> logout
-                                    </button>
+                                <div class="preset-grid" id="preset-actions-grid">
+                                    <!-- Populated dynamically by app.js -->
                                 </div>
                             </div>
 
@@ -121,7 +115,7 @@
                                 <h3>Custom Action Ingester</h3>
                                 <form id="custom-event-form">
                                     <div class="input-action-group">
-                                        <input type="text" id="custom-action-input" placeholder="e.g. apply_coupon, share_item" required>
+                                        <input type="text" id="custom-action-input" placeholder="e.g. click_upgrade, open_share_modal" required>
                                         <button type="submit" class="btn btn-primary">
                                             <i class="fa-solid fa-paper-plane"></i> Send
                                         </button>
@@ -237,7 +231,7 @@
                                 <p class="section-help">You can populate the model database with standard patterns and run the training cycle.</p>
                                 <div class="btn-group">
                                     <button class="btn btn-secondary" id="btn-simulate">
-                                        <i class="fa-solid fa-database"></i> Batch Simulate Shoppers
+                                        <i class="fa-solid fa-database"></i> Batch Simulate Profiles
                                     </button>
                                     <button class="btn btn-primary" id="btn-train">
                                         <i class="fa-solid fa-dumbbell"></i> Fit LSTM Model
@@ -254,7 +248,7 @@
                                         <button class="btn-clear-console" id="btn-clear-console" title="Clear Console">Clear</button>
                                     </div>
                                     <pre class="console-output" id="console-output">SYSTEM: Operations tab active. Waiting for training command...
-Suggestion: Click "Batch Simulate Shoppers" to fill profiles, then click "Fit LSTM Model".</pre>
+Suggestion: Click "Batch Simulate Profiles" to fill profiles, then click "Fit LSTM Model".</pre>
                                 </div>
                             </div>
                         </div>
@@ -266,31 +260,31 @@ Suggestion: Click "Batch Simulate Shoppers" to fill profiles, then click "Fit LS
             <div class="tab-pane" id="tab-guide">
                 <section class="dashboard-card card-guide">
                     <div class="card-header">
-                        <h2><i class="fa-solid fa-circle-info text-gradient"></i> AI Behavior Prediction Platform Guide</h2>
+                        <h2><i class="fa-solid fa-circle-info text-gradient"></i> Manovra Prediction Platform Guide</h2>
                         <span class="badge prediction-badge">Tutorial</span>
                     </div>
                     <div class="card-body">
                         <div class="guide-container">
                             <div class="guide-intro">
-                                <h3>Welcome to the Real-Time Recommendation Platform (RTRP)</h3>
-                                <p>This dashboard is a live playground demonstrating how recurrent neural networks (RNNs) forecast sequences of user actions in real-time. By observing patterns, the system calculates the likelihood of subsequent actions.</p>
+                                <h3>Welcome to the Manovra Behavior Prediction Console</h3>
+                                <p>This dashboard is a live playground demonstrating how recurrent neural networks (RNNs) forecast sequences of user actions in real-time across different domains. By observing behavioral patterns, the system calculates the probability distribution of subsequent actions.</p>
                             </div>
 
                             <div class="guide-grid">
                                 <div class="guide-card">
                                     <div class="guide-card-icon text-blue">
-                                        <i class="fa-solid fa-user-gear"></i>
+                                        <i class="fa-solid fa-network-wired"></i>
                                     </div>
-                                    <h4>1. Choose a Profile</h4>
-                                    <p>Select an active User ID from the dropdown or click <b>"New User"</b>. You can act on behalf of this user in the simulator.</p>
+                                    <h4>1. Select a Domain Preset</h4>
+                                    <p>Toggle between SaaS App, Gaming, Streaming, and E-Commerce. The actions and users will dynamically adapt.</p>
                                 </div>
 
                                 <div class="guide-card">
                                     <div class="guide-card-icon text-cyan">
-                                        <i class="fa-solid fa-input-numeric"></i>
+                                        <i class="fa-solid fa-arrow-pointer"></i>
                                     </div>
                                     <h4>2. Ingest Actions</h4>
-                                    <p>Click preset buttons (like <b>login</b>, <b>add_to_cart</b>) or type custom events. Every action updates the user history sequence.</p>
+                                    <p>Click preset buttons (like <b>view_dashboard</b>, <b>create_project</b>) or type custom events. Every action updates the user history sequence.</p>
                                 </div>
 
                                 <div class="guide-card">
@@ -305,7 +299,7 @@ Suggestion: Click "Batch Simulate Shoppers" to fill profiles, then click "Fit LS
                                     <div class="guide-card-icon text-green">
                                         <i class="fa-solid fa-dumbbell"></i>
                                     </div>
-                                    <h4>4. Train the Model</h4>
+                                    <h4>4. Fit the Model</h4>
                                     <p>Go to the <b>Telemetry &amp; Training</b> tab. Click <b>"Batch Simulate"</b> to load data, then click <b>"Fit LSTM Model"</b> to train the neural network live.</p>
                                 </div>
                             </div>
@@ -324,7 +318,7 @@ Suggestion: Click "Batch Simulate Shoppers" to fill profiles, then click "Fit LS
         </main>
         
         <footer class="app-footer-info">
-            <p>AI Behavior Prediction Engine &bull; Designed &amp; Crafted for visual excellence &bull; FastAPI + PyTorch LSTM</p>
+            <p>Manovra Behavior Engine &bull; Designed &amp; Crafted for predictive excellence &bull; FastAPI + PyTorch LSTM</p>
         </footer>
     </div>
 

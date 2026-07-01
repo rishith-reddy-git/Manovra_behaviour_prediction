@@ -7,9 +7,83 @@ document.addEventListener('DOMContentLoaded', () => {
     const API_ADMIN_SIMULATE = '/api/v1/admin/simulate';
     const API_ADMIN_TRAIN = '/api/v1/admin/train';
 
+    // Domain Configurations
+    const DOMAINS_CONFIG = {
+        saas: {
+            name: "SaaS Workspace",
+            prefix: "saas_user",
+            users: ['dev_alice', 'admin_bob', 'guest_charlie', 'billing_david', 'dev_emily'],
+            actions: [
+                { id: "login", label: "login", icon: "fa-right-to-bracket", color: "text-blue" },
+                { id: "view_dashboard", label: "dashboard", icon: "fa-chart-pie", color: "text-cyan" },
+                { id: "create_project", label: "create proj", icon: "fa-folder-plus", color: "text-yellow" },
+                { id: "invite_member", label: "invite user", icon: "fa-user-plus", color: "text-green" },
+                { id: "configure_api", label: "config api", icon: "fa-sliders", color: "text-orange" },
+                { id: "deploy_service", label: "deploy", icon: "fa-cloud-arrow-up", color: "text-indigo" },
+                { id: "upgrade_billing", label: "upgrade", icon: "fa-credit-card", color: "text-purple" },
+                { id: "view_logs", label: "view logs", icon: "fa-list-check", color: "text-red" },
+                { id: "logout", label: "logout", icon: "fa-right-from-bracket", color: "text-muted" }
+            ]
+        },
+        gaming: {
+            name: "Gaming Platform",
+            prefix: "gamer",
+            users: ['gamer_greg', 'casual_sam', 'social_zoe', 'whale_will', 'speedrunner_sara'],
+            actions: [
+                { id: "login", label: "login", icon: "fa-right-to-bracket", color: "text-blue" },
+                { id: "open_lobby", label: "lobby", icon: "fa-door-open", color: "text-yellow" },
+                { id: "join_matchmaker", label: "matchmake", icon: "fa-spinner", color: "text-cyan" },
+                { id: "start_match", label: "play match", icon: "fa-gamepad", color: "text-green" },
+                { id: "complete_quest", label: "quest complete", icon: "fa-trophy", color: "text-orange" },
+                { id: "purchase_item", label: "buy skin", icon: "fa-gem", color: "text-purple" },
+                { id: "send_friend_request", label: "add friend", icon: "fa-user-plus", color: "text-indigo" },
+                { id: "open_settings", label: "settings", icon: "fa-gears", color: "text-cyan" },
+                { id: "logout", label: "logout", icon: "fa-right-from-bracket", color: "text-muted" }
+            ]
+        },
+        media: {
+            name: "Streaming Platform",
+            prefix: "viewer",
+            users: ['binge_watcher', 'casual_viewer', 'curator_dan', 'subscriber_sue', 'listener_leo'],
+            actions: [
+                { id: "login", label: "login", icon: "fa-right-to-bracket", color: "text-blue" },
+                { id: "search_content", label: "search", icon: "fa-magnifying-glass", color: "text-yellow" },
+                { id: "play_media", label: "play", icon: "fa-play", color: "text-green" },
+                { id: "pause_media", label: "pause", icon: "fa-pause", color: "text-red" },
+                { id: "add_to_favorites", label: "like", icon: "fa-heart", color: "text-orange" },
+                { id: "share_media", label: "share", icon: "fa-share-nodes", color: "text-indigo" },
+                { id: "rate_content", label: "rate", icon: "fa-star", color: "text-cyan" },
+                { id: "subscribe_channel", label: "subscribe", icon: "fa-bell", color: "text-purple" },
+                { id: "logout", label: "logout", icon: "fa-right-from-bracket", color: "text-muted" }
+            ]
+        },
+        ecommerce: {
+            name: "E-Commerce",
+            prefix: "shopper",
+            users: ['shopper_emma', 'browser_jack', 'support_chloe', 'buyer_ben', 'reviewer_rose'],
+            actions: [
+                { id: "login", label: "login", icon: "fa-right-to-bracket", color: "text-blue" },
+                { id: "search_product", label: "search", icon: "fa-magnifying-glass", color: "text-yellow" },
+                { id: "view_item", label: "view item", icon: "fa-eye", color: "text-cyan" },
+                { id: "add_to_cart", label: "add to cart", icon: "fa-cart-plus", color: "text-green" },
+                { id: "remove_from_cart", label: "remove", icon: "fa-cart-arrow-down", color: "text-red" },
+                { id: "view_reviews", label: "reviews", icon: "fa-star", color: "text-orange" },
+                { id: "checkout_start", label: "checkout", icon: "fa-credit-card", color: "text-purple" },
+                { id: "purchase_complete", label: "purchase", icon: "fa-check-double", color: "text-indigo" },
+                { id: "logout", label: "logout", icon: "fa-right-from-bracket", color: "text-muted" }
+            ]
+        }
+    };
+
     // State Variables
-    let activeUser = 'test_user_1';
-    const knownUsers = new Set(['test_user_1', 'shopper_alice', 'browser_bob', 'supporter_charlie']);
+    let currentDomain = 'saas';
+    let activeUser = 'dev_alice';
+    const knownUsersByDomain = {
+        saas: new Set(DOMAINS_CONFIG.saas.users),
+        gaming: new Set(DOMAINS_CONFIG.gaming.users),
+        media: new Set(DOMAINS_CONFIG.media.users),
+        ecommerce: new Set(DOMAINS_CONFIG.ecommerce.users)
+    };
 
     // DOM Elements
     const apiStatusPill = document.getElementById('api-status-pill');
@@ -35,9 +109,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnClearConsole = document.getElementById('btn-clear-console');
 
     // Sandbox Controls Elements
+    const domainBtns = document.querySelectorAll('.domain-btn');
     const userSelector = document.getElementById('user-selector');
     const btnNewUser = document.getElementById('btn-new-user');
-    const presetBtns = document.querySelectorAll('.btn-preset');
+    const presetActionsGrid = document.getElementById('preset-actions-grid');
     const customEventForm = document.getElementById('custom-event-form');
     const customActionInput = document.getElementById('custom-action-input');
     const streamFeedWrapper = document.getElementById('stream-feed-wrapper');
@@ -68,11 +143,71 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Helper: Write to console log
-
     function logToConsole(message, type = 'INFO') {
         const time = new Date().toLocaleTimeString();
         consoleOutput.textContent += `\n[${time}] ${type}: ${message}`;
         consoleOutput.scrollTop = consoleOutput.scrollHeight;
+    }
+
+    // Helper: Find action icons/colors across all configs for rendering
+    function getActionVisuals(actionId) {
+        for (const domKey in DOMAINS_CONFIG) {
+            const match = DOMAINS_CONFIG[domKey].actions.find(a => a.id === actionId);
+            if (match) return match;
+        }
+        return { id: actionId, label: actionId, icon: "fa-bolt", color: "text-muted" };
+    }
+
+    // Initialize Domain UI (users selector and preset buttons)
+    function selectDomain(domainKey) {
+        currentDomain = domainKey;
+        const config = DOMAINS_CONFIG[domainKey];
+
+        // 1. Update Domain buttons
+        domainBtns.forEach(btn => {
+            if (btn.getAttribute('data-domain') === domainKey) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+
+        // 2. Repopulate user selector
+        userSelector.innerHTML = '';
+        const usersSet = knownUsersByDomain[domainKey];
+        usersSet.forEach(user => {
+            const opt = document.createElement('option');
+            opt.value = user;
+            opt.textContent = `${user} (${config.name})`;
+            userSelector.appendChild(opt);
+        });
+
+        // Add a fallback test user
+        const testUser = `test_${config.prefix}_1`;
+        if (!usersSet.has(testUser)) {
+            usersSet.add(testUser);
+            const opt = document.createElement('option');
+            opt.value = testUser;
+            opt.textContent = testUser;
+            userSelector.appendChild(opt);
+        }
+
+        // Set default active user for this domain
+        activeUser = Array.from(usersSet)[0];
+        userSelector.value = activeUser;
+
+        // 3. Render preset action buttons
+        presetActionsGrid.innerHTML = '';
+        config.actions.forEach(action => {
+            const btn = document.createElement('button');
+            btn.className = 'btn btn-preset';
+            btn.setAttribute('data-action', action.id);
+            btn.innerHTML = `<i class="fa-solid ${action.icon} ${action.color}"></i> ${action.label}`;
+            btn.addEventListener('click', () => ingestEvent(action.id));
+            presetActionsGrid.appendChild(btn);
+        });
+
+        logToConsole(`Switched domain to ${config.name}. Active target profile: ${activeUser}`);
     }
 
     // 1. Check API Connection & Load Telemetry
@@ -81,15 +216,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const res = await fetch(API_STATUS);
             if (res.ok) {
                 apiStatusPill.className = 'status-pill status-online';
-                apiStatusText.textContent = 'API Connection Active';
+                apiStatusText.textContent = 'Manovra API Online';
                 return true;
             } else {
                 throw new Error('Bad Status');
             }
         } catch (err) {
             apiStatusPill.className = 'status-pill status-offline';
-            apiStatusText.textContent = 'API Connection Offline';
-            logToConsole('Connection to server failed. Verify uvicorn is running.', 'ERROR');
+            apiStatusText.textContent = 'Connection Offline';
+            logToConsole('Connection to server failed. Verify FastAPI server is running.', 'ERROR');
             return false;
         }
     }
@@ -104,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await res.json();
 
             // Populate text elements
-            modelLoadedVal.textContent = data.model_loaded ? 'Loaded' : 'Random Init';
+            modelLoadedVal.textContent = data.model_loaded ? 'Ready (PyTorch)' : 'Random Weights';
             modelLoadedVal.className = 'stat-value ' + (data.model_loaded ? 'text-green' : 'text-yellow');
             
             activeUsersVal.textContent = data.active_users;
@@ -119,8 +254,6 @@ document.addEventListener('DOMContentLoaded', () => {
             cfgLayers.textContent = data.settings.num_layers;
             cfgSeqLen.textContent = data.settings.max_seq_length;
             cfgModified.textContent = data.model_last_modified;
-
-            logToConsole('Telemetry and settings refreshed.');
         } catch (err) {
             logToConsole('Failed to retrieve model telemetry status.', 'ERROR');
         }
@@ -133,7 +266,6 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const res = await fetch(`${API_PREDICT}/${activeUser}`);
             if (!res.ok) {
-                // Usually 404 because user has no history
                 if (res.status === 404) {
                     renderEmptyPredictions();
                     renderEmptyTimeline();
@@ -142,35 +274,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const data = await res.json();
             
-            renderTimeline(activeUser, data.history_length);
+            await renderTimeline(activeUser);
             renderPredictions(data.predictions);
         } catch (err) {
             logToConsole(`Failed fetching predictions for ${activeUser}`, 'ERROR');
         }
     }
 
-    // Helper: Fetch history directly or deduce it
-    async function renderTimeline(userId, length) {
-        // Since prediction route only returns length and user, we can fetch history if we had an endpoint.
-        // Wait, does the API store history? Yes, in `user_histories` in memory.
-        // However, we don't have a direct GET history endpoint in the original routes.
-        // But we can trigger a GET prediction, and since we ingested the action in the client,
-        // we can maintain the visual history sequence locally, OR we can query the backend.
-        // Wait! Let's check: does predict endpoint return the history? No, only history_length.
-        // Oh, let's add a quick endpoint to GET user history! 
-        // Wait, if we can add a route `/api/v1/history/{user_id}` or similar in `main.py` or `predict.py`,
-        // it makes rendering the timeline 100% correct and synced with the server!
-        // Let's verify: yes, we can fetch it. If we don't have it, we can just maintain a local dictionary
-        // of sequences in `app.js` that mirrors what we sent, plus we seed it on simulate.
-        // To keep the backend code robust and fully integrated, let's create a quick API router for history,
-        // OR we can just add a route `/api/v1/history/{user_id}` in `api/routes/predict.py`.
-        // Let's write code that fetches history if available, or falls back to local tracking.
-        // Wait! We can easily add a `/history/{user_id}` route to `predict.py` since it's so simple:
-        // @router.get("/history/{user_id}")
-        // def get_history(user_id: str): return {"user_id": user_id, "history": user_histories.get(user_id, [])}
-        // Let's modify `api/routes/predict.py` to add this route! It is extremely clean and ensures high fidelity!
-        // For now, let's write the JS to query `/api/v1/history/${userId}`.
-        
+    // Render sequence timeline querying backend history
+    async function renderTimeline(userId) {
         try {
             const res = await fetch(`/api/v1/history/${userId}`);
             if (!res.ok) throw new Error();
@@ -186,9 +298,10 @@ document.addEventListener('DOMContentLoaded', () => {
             sequenceTimeline.innerHTML = '';
             
             history.forEach((action, idx) => {
+                const visuals = getActionVisuals(action);
                 const node = document.createElement('div');
                 node.className = `timeline-node action-${action}`;
-                node.textContent = action;
+                node.innerHTML = `<i class="fa-solid ${visuals.icon} ${visuals.color}"></i> <span>${action}</span>`;
                 sequenceTimeline.appendChild(node);
                 
                 if (idx < history.length - 1) {
@@ -202,9 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Auto scroll timeline to end
             sequenceTimeline.scrollLeft = sequenceTimeline.scrollWidth;
         } catch (err) {
-            // Fallback: if route doesn't exist, show generic indicator
-            emptyTimelinePlaceholder.style.display = 'none';
-            sequenceTimeline.innerHTML = `<div class="timeline-node">Session length: ${length} events</div>`;
+            renderEmptyTimeline();
         }
     }
 
@@ -220,13 +331,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         predictions.forEach(item => {
             const probPct = (item.probability * 100).toFixed(1);
+            const visuals = getActionVisuals(item.predicted_action);
             
             const predEl = document.createElement('div');
             predEl.className = 'prediction-item';
             predEl.innerHTML = `
                 <div class="prediction-meta">
                     <span class="prediction-name">
-                        <i class="fa-solid fa-bolt"></i> ${item.predicted_action}
+                        <i class="fa-solid ${visuals.icon} ${visuals.color}"></i> ${item.predicted_action}
                     </span>
                     <span class="prediction-percent">${probPct}%</span>
                 </div>
@@ -236,7 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             predictionsList.appendChild(predEl);
             
-            // Trigger animation in next frame
+            // Trigger animation
             setTimeout(() => {
                 const fill = predEl.querySelector('.prediction-bar-fill');
                 if (fill) fill.style.width = `${probPct}%`;
@@ -259,45 +371,47 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. Operations Handlers (Simulate & Train)
     btnSimulate.addEventListener('click', async () => {
         btnSimulate.disabled = true;
-        btnSimulate.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Seeding...';
+        btnSimulate.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Simulating...';
+        logToConsole(`Batch simulating mock sequences for domain '${currentDomain}'...`);
         
         try {
-            const res = await fetch(API_ADMIN_SIMULATE, { method: 'POST' });
+            const res = await fetch(`${API_ADMIN_SIMULATE}?domain=${currentDomain}`, { method: 'POST' });
             const data = await res.json();
             
             logToConsole(data.message, 'SUCCESS');
             
-            // Add simulated users to the select if not exists
-            const simulatedUsers = ['shopper_alice', 'browser_bob', 'supporter_charlie', 'shopper_david', 'browser_emily'];
-            simulatedUsers.forEach(user => {
-                if (!knownUsers.has(user)) {
-                    knownUsers.add(user);
-                    const opt = document.createElement('option');
-                    opt.value = user;
-                    opt.textContent = `${user} (Simulated)`;
-                    userSelector.appendChild(opt);
-                }
+            // Sync user list from config preset
+            const config = DOMAINS_CONFIG[currentDomain];
+            const usersSet = knownUsersByDomain[currentDomain];
+            config.users.forEach(user => usersSet.add(user));
+
+            // Reload dropdown
+            userSelector.innerHTML = '';
+            usersSet.forEach(user => {
+                const opt = document.createElement('option');
+                opt.value = user;
+                opt.textContent = `${user} (${config.name})`;
+                userSelector.appendChild(opt);
             });
 
-            // Update UI
+            // Set active user to the first simulated user
+            activeUser = config.users[0];
+            userSelector.value = activeUser;
+
             await loadTelemetry();
-            
-            // Set Alice as active simulated user to show immediate data
-            userSelector.value = 'shopper_alice';
-            activeUser = 'shopper_alice';
             await fetchPredictions();
         } catch (err) {
-            logToConsole('Batch simulation failed.', 'ERROR');
+            logToConsole('Batch simulation pipeline execution failed.', 'ERROR');
         } finally {
             btnSimulate.disabled = false;
-            btnSimulate.innerHTML = '<i class="fa-solid fa-database"></i> Batch Simulate';
+            btnSimulate.innerHTML = '<i class="fa-solid fa-database"></i> Batch Simulate Profiles';
         }
     });
 
     btnTrain.addEventListener('click', async () => {
         btnTrain.disabled = true;
-        btnTrain.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Training...';
-        logToConsole('Training started on current user histories...');
+        btnTrain.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Training RNN...';
+        logToConsole('Training recurrent network on active sequence data...');
 
         try {
             const res = await fetch(API_ADMIN_TRAIN, { method: 'POST' });
@@ -306,7 +420,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.status === 'success') {
                 logToConsole(data.message, 'SUCCESS');
                 if (data.logs) {
-                    consoleOutput.textContent += `\n\n=== TRAINING LOGS ===\n${data.logs.trim()}\n======================\n`;
+                    consoleOutput.textContent += `\n\n=== PyTorch Training Cycles ===\n${data.logs.trim()}\n======================\n`;
                     consoleOutput.scrollTop = consoleOutput.scrollHeight;
                 }
                 await loadTelemetry();
@@ -315,10 +429,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 logToConsole(data.message, 'WARNING');
             }
         } catch (err) {
-            logToConsole('Model training execution failed.', 'ERROR');
+            logToConsole('LSTM network optimization cycle failed.', 'ERROR');
         } finally {
             btnTrain.disabled = false;
-            btnTrain.innerHTML = '<i class="fa-solid fa-dumbbell"></i> Train Model';
+            btnTrain.innerHTML = '<i class="fa-solid fa-dumbbell"></i> Fit LSTM Model';
         }
     });
 
@@ -347,21 +461,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 item.className = 'stream-item';
                 
                 const now = new Date().toLocaleTimeString();
+                const visuals = getActionVisuals(eventType);
+
                 item.innerHTML = `
-                    <span>User <b class="select-all">${activeUser}</b> triggered <span class="stream-item-tag">${eventType}</span></span>
+                    <span>User <b class="select-all">${activeUser}</b> triggered <span class="stream-item-tag"><i class="fa-solid ${visuals.icon} ${visuals.color}"></i> ${eventType}</span></span>
                     <span class="stream-item-time">${now}</span>
                 `;
                 streamFeedList.appendChild(item);
                 
-                // Keep only latest 15 elements in UI log
+                // Keep only latest 15 elements
                 while (streamFeedList.children.length > 15) {
                     streamFeedList.removeChild(streamFeedList.firstChild);
                 }
                 
-                // Scroll log wrapper to bottom
                 streamFeedWrapper.scrollTop = streamFeedWrapper.scrollHeight;
 
-                // Update UI: history stats, predictions
+                // Update UI
                 await loadTelemetry();
                 await fetchPredictions();
             }
@@ -370,54 +485,67 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Ingest via preset buttons
-    presetBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const action = btn.getAttribute('data-action');
-            if (action) ingestEvent(action);
-        });
-    });
-
     // Ingest custom event
     customEventForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        const action = customActionInput.value.trim();
+        const action = customActionInput.value.trim().toLowerCase().replace(/\s+/g, '_');
         if (action) {
             ingestEvent(action);
             customActionInput.value = '';
         }
     });
 
-    // 5. Interface Interactions (User selection, console clearing, refresh)
+    // 5. Interface Interactions (User selection, domain select, console clearing, refresh)
+    domainBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const domain = btn.getAttribute('data-domain');
+            if (domain) {
+                selectDomain(domain);
+                fetchPredictions();
+            }
+        });
+    });
+
     userSelector.addEventListener('change', (e) => {
         activeUser = e.target.value;
-        logToConsole(`Target user switched to: ${activeUser}`);
+        logToConsole(`Switched focus user: ${activeUser}`);
         fetchPredictions();
     });
 
     btnNewUser.addEventListener('click', () => {
-        const randId = 'user_' + Math.floor(1000 + Math.random() * 9000);
-        knownUsers.add(randId);
+        const config = DOMAINS_CONFIG[currentDomain];
+        const randId = `${config.prefix}_` + Math.floor(100 + Math.random() * 900);
+        
+        const usersSet = knownUsersByDomain[currentDomain];
+        usersSet.add(randId);
         
         const opt = document.createElement('option');
         opt.value = randId;
-        opt.textContent = randId;
+        opt.textContent = `${randId} (${config.name})`;
         userSelector.appendChild(opt);
         
         userSelector.value = randId;
         activeUser = randId;
-        logToConsole(`Created new temporary user profile: ${randId}`);
+        logToConsole(`Registered new behavioral node: ${randId}`);
         fetchPredictions();
     });
 
     btnClearConsole.addEventListener('click', () => {
-        consoleOutput.textContent = 'SYSTEM: Console cleared.';
+        consoleOutput.textContent = 'SYSTEM: Logs cleared.';
     });
 
-    btnRefreshStatus.addEventListener('click', loadTelemetry);
-    btnForcePredict.addEventListener('click', fetchPredictions);
+    btnRefreshStatus.addEventListener('click', async () => {
+        await loadTelemetry();
+        logToConsole('Manovra engine diagnostics refreshed.');
+    });
+    
+    btnForcePredict.addEventListener('click', async () => {
+        await fetchPredictions();
+        logToConsole(`Recalculated predictions for user: ${activeUser}`);
+    });
 
-    // Initial load
+    // Initial setup: Default domain is SaaS
+    selectDomain('saas');
     loadTelemetry();
     fetchPredictions();
 });
