@@ -62,15 +62,17 @@ document.addEventListener('DOMContentLoaded', () => {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         
+        const bubbleColors = ['#0ea5e9', '#8b5cf6', '#ec4899', '#10b981', '#f59e0b'];
         const particles = [];
-        for (let i = 0; i < 45; i++) {
+        for (let i = 0; i < 30; i++) {
             particles.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
-                vx: (Math.random() - 0.5) * 0.4,
-                vy: (Math.random() - 0.5) * 0.4,
-                r: Math.random() * 2 + 1,
-                alpha: Math.random() * 0.5 + 0.1
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+                r: Math.random() * 5 + 3,
+                color: bubbleColors[Math.floor(Math.random() * bubbleColors.length)],
+                alpha: Math.random() * 0.25 + 0.1
             });
         }
         
@@ -84,9 +86,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(0, 242, 254, ${p.alpha})`;
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = p.alpha;
                 ctx.fill();
             });
+            ctx.globalAlpha = 1.0;
             requestAnimationFrame(animate);
         }
         animate();
