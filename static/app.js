@@ -62,12 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Global selector trigger
     studentTwinSelect.addEventListener('change', (e) => {
         activeStudentTwin = e.target.value;
-        const activeTab = document.querySelector('.tab-btn.active').getAttribute('data-tab');
-        if (activeTab === 'tab-digital-twin') {
-            loadStudentTwinDashboard();
-        } else if (activeTab === 'tab-coach') {
-            resetCoachChat();
-        }
+        loadStudentTwinDashboard();
+        resetCoachChat();
     });
 
     // -------------------------------------------------------------

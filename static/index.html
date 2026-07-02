@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manovra Academy Behavior Engine</title>
+    <title>Manovra Behavior Engine</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,9 +12,6 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <!-- Background Particles Canvas -->
-    <canvas id="particles-canvas"></canvas>
-    
     <div class="app-container">
         <!-- Header -->
         <header class="app-header">
@@ -23,7 +20,7 @@
                     <i class="fa-solid fa-brain"></i>
                 </div>
                 <div>
-                    <h1>Manovra Academy</h1>
+                    <h1>Manovra</h1>
                     <p class="subtitle">Student Digital Twin Analytics & Universal Behavior Prediction Engine</p>
                 </div>
             </div>
@@ -548,6 +545,17 @@
                             </div>
                         </section>
 
+                        <section class="dashboard-card card-sandbox-importance-chart">
+                            <div class="card-header">
+                                <h2><i class="fa-solid fa-chart-bar"></i> Feature Importance (SHAP Weights)</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-wrapper">
+                                    <canvas id="importanceChart"></canvas>
+                                </div>
+                            </div>
+                        </section>
+
                         <section class="dashboard-card card-sandbox-predict">
                             <div class="card-header">
                                 <h2><i class="fa-solid fa-magic"></i> Live Custom Predictor 🔮</h2>
@@ -576,7 +584,7 @@
         </main>
         
         <footer class="app-footer">
-            <p>Manovra Academy &bull; Student Digital Twin Platform & Universal behavior ML Predictor</p>
+            <p>Manovra &bull; Student Digital Twin Platform & Universal Behavior ML Predictor</p>
         </footer>
     </div>
 </body>
