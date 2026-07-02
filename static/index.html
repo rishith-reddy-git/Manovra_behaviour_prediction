@@ -3,960 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manovra | Classroom Intelligence & Student Digital Twin</title>
-    <!-- Fonts -->
+    <title>Enterprise AI Predictor Console</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <!-- Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Chart.js -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <!-- Background Canvas for Interactive Particle Animation -->
-    <canvas id="particles-canvas"></canvas>
-    
-    <div class="glow-backdrop"></div>
     <div class="app-container">
         <!-- Header -->
         <header class="app-header">
             <div class="logo-area">
                 <div class="logo-icon">
-                    <i class="fa-solid fa-brain text-gradient"></i>
+                    <i class="fa-solid fa-server"></i>
                 </div>
                 <div>
-                    <h1 class="text-gradient">Manovra Academy</h1>
-                    <p class="subtitle">Classroom Intelligence & Student Digital Twin Engine</p>
+                    <h1>Enterprise AI Predictor</h1>
+                    <p class="subtitle">Sequential Behavior Model Sandbox & Feature Inference Playground</p>
                 </div>
             </div>
-            
-            <!-- Main Navigation Tabs -->
-            <nav class="nav-tabs">
-                <button class="tab-btn active" data-tab="tab-classroom">
-                    <i class="fa-solid fa-graduation-cap"></i> Classroom Hub 🏫
-                </button>
-                <button class="tab-btn" data-tab="tab-digital-twin">
-                    <i class="fa-solid fa-dna"></i> My Clone 👥
-                </button>
-                <button class="tab-btn" data-tab="tab-future-simulator">
-                    <i class="fa-solid fa-clock-rotate-left"></i> Time Machine 🔮
-                </button>
-                <button class="tab-btn" data-tab="tab-coach">
-                    <i class="fa-solid fa-comments"></i> AI Coach 💬
-                </button>
-                <button class="tab-btn" data-tab="tab-sandbox-model">
-                    <i class="fa-solid fa-flask"></i> Playzone 🧪
-                </button>
-                <button class="tab-btn" data-tab="tab-dev-control">
-                    <i class="fa-solid fa-gears"></i> Dev Mode 🛠
-                </button>
-            </nav>
-
             <div class="header-status">
                 <div class="status-pill status-online" id="api-status-pill">
                     <span class="pulse-dot"></span>
-                    <span id="api-status-text">Connecting to API...</span>
+                    <span id="api-status-text">Engine Online</span>
                 </div>
             </div>
         </header>
 
-        <!-- Main Dashboard View -->
-        <main class="dashboard-main-content">
-            
-            <!-- TAB 1: CLASSROOM INTELLIGENCE DASHBOARD -->
-            <div class="tab-pane active" id="tab-classroom">
-                <div class="classroom-layout">
-                    <!-- Left: Metrics Heatmap & Warning Feed -->
-                    <div class="classroom-left">
-                        <!-- Heatmap summary stats -->
-                        <section class="dashboard-card card-grid-summary">
-                            <div class="card-header">
-                                <h2><i class="fa-solid fa-chart-simple"></i> Class Performance & Risk Index</h2>
-                            </div>
-                            <div class="card-body">
-                                <div class="stats-grid">
-                                    <div class="stat-box">
-                                        <span class="stat-label">Average CGPA</span>
-                                        <span class="stat-value" id="class-avg-cgpa">8.05</span>
-                                    </div>
-                                    <div class="stat-box">
-                                        <span class="stat-label">Average Engagement</span>
-                                        <span class="stat-value" id="class-avg-participation">78%</span>
-                                    </div>
-                                    <div class="stat-box">
-                                        <span class="stat-label">Burnout Alert Rate</span>
-                                        <span class="stat-value text-red" id="class-burnout-rate">30%</span>
-                                    </div>
-                                    <div class="stat-box">
-                                        <span class="stat-label">Total Student Twins</span>
-                                        <span class="stat-value" id="class-total-students">10</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <!-- Classroom Categories Grid -->
-                        <section class="dashboard-card card-cohort-categories">
-                            <div class="card-header">
-                                <h2><i class="fa-solid fa-users-rectangle"></i> Behavioral Segments</h2>
-                            </div>
-                            <div class="card-body">
-                                <div class="segments-grid">
-                                    <div class="segment-box">
-                                        <div class="segment-header text-green">
-                                            <i class="fa-solid fa-bolt"></i> Top Improvers
-                                        </div>
-                                        <ul id="list-top-improvers" class="segment-list"></ul>
-                                    </div>
-                                    <div class="segment-box">
-                                        <div class="segment-header text-yellow">
-                                            <i class="fa-solid fa-comment-slash"></i> Silent Learners
-                                        </div>
-                                        <ul id="list-silent-learners" class="segment-list"></ul>
-                                    </div>
-                                    <div class="segment-box">
-                                        <div class="segment-header text-red">
-                                            <i class="fa-solid fa-fire"></i> Burnout Candidates
-                                        </div>
-                                        <ul id="list-burnout-candidates" class="segment-list"></ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <!-- Tesla-style Early Warning System -->
-                        <section class="dashboard-card card-early-warning">
-                            <div class="card-header">
-                                <h2><i class="fa-solid fa-triangle-exclamation text-yellow"></i> Early Warning Notifications</h2>
-                                <span class="badge warning-badge">Real-Time Alerts</span>
-                            </div>
-                            <div class="card-body feed-body">
-                                <ul id="alert-notifications-list" class="alert-feed-list">
-                                    <li class="alert-feed-item critical">
-                                        <div class="alert-icon"><i class="fa-solid fa-circle-exclamation"></i></div>
-                                        <div class="alert-info">
-                                            <h4>Motivation Collapse Warning</h4>
-                                            <p>Student #102 (Liam Neeson) study frequency dropped below 30% baseline.</p>
-                                        </div>
-                                        <span class="alert-time">Just Now</span>
-                                    </li>
-                                    <li class="alert-feed-item warning">
-                                        <div class="alert-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                                        <div class="alert-info">
-                                            <h4>Burnout Probability Spike</h4>
-                                            <p>Student #106 (Jackson Pollock) stress index reached 78% (Fluctuating sequence).</p>
-                                        </div>
-                                        <span class="alert-time">2m ago</span>
-                                    </li>
-                                    <li class="alert-feed-item info">
-                                        <div class="alert-icon"><i class="fa-solid fa-info-circle"></i></div>
-                                        <div class="alert-info">
-                                            <h4>Attention Decline Detected</h4>
-                                            <p>Student #103 (Olivia Rodrigo) logged late assignment uploads (importance +15%).</p>
-                                        </div>
-                                        <span class="alert-time">10m ago</span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </section>
+        <!-- Main Workspace -->
+        <main class="workspace-layout">
+            <!-- Left Column: Data Ingestion & Model Config -->
+            <div class="workspace-col col-left">
+                <!-- 1. Dataset Ingestion -->
+                <section class="dashboard-card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-file-import"></i> 1. Dataset Ingestion</h2>
                     </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="dataset-select">Dataset Data Frame Source</label>
+                            <select id="dataset-select">
+                                <option value="churn">Customer Churn Log (Preset Demo)</option>
+                                <option value="upload">Upload Custom Dataset File (CSV/JSON)</option>
+                            </select>
+                        </div>
+                        
+                        <div id="upload-group" class="form-group hide">
+                            <label for="dataset-file">Upload Behavior Records (.csv, .json)</label>
+                            <input type="file" id="dataset-file" accept=".csv,.json">
+                        </div>
 
-                    <!-- Right: Embeddings Scatter Plot & Department Compare -->
-                    <div class="classroom-right">
-                        <section class="dashboard-card card-embeddings-scatter">
-                            <div class="card-header">
-                                <h2><i class="fa-solid fa-cubes-stacked"></i> Behaviour Embeddings Clustering</h2>
-                                <span class="badge accent-badge">64D Vector KMeans</span>
+                        <!-- Shape and columns summary info -->
+                        <div class="stats-grid mini-stats" id="dataset-stats-summary" style="display: none;">
+                            <div class="stat-box">
+                                <span class="stat-label">Total Rows</span>
+                                <span class="stat-value" id="stats-total-rows">0</span>
                             </div>
-                            <div class="card-body">
-                                <p class="section-help">Clicking a student node in the embedding space focuses their Digital Twin profile.</p>
-                                <div class="chart-wrapper">
-                                    <canvas id="embeddingsScatterChart"></canvas>
-                                </div>
+                            <div class="stat-box">
+                                <span class="stat-label">Columns Count</span>
+                                <span class="stat-value" id="stats-cols-count">0</span>
                             </div>
-                        </section>
+                        </div>
 
-                        <section class="dashboard-card card-cohort-comparison">
-                            <div class="card-header">
-                                <h2><i class="fa-solid fa-chart-line"></i> Cohort & Departmental Metrics</h2>
-                            </div>
-                            <div class="card-body">
-                                <table class="comparison-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Department</th>
-                                            <th>Avg CGPA</th>
-                                            <th>Stress Index</th>
-                                            <th>Participation</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="departmental-tbody">
-                                        <!-- Loaded dynamically -->
-                                    </tbody>
+                        <!-- Data Explorer Preview -->
+                        <div class="form-group">
+                            <label>Data Frame Preview (Top 5 Rows)</label>
+                            <div class="table-container">
+                                <div id="preview-empty" class="text-muted text-center" style="padding: 1rem 0;">No dataset loaded yet</div>
+                                <table id="preview-table" class="comparison-table hide">
+                                    <thead id="preview-thead"></thead>
+                                    <tbody id="preview-tbody"></tbody>
                                 </table>
                             </div>
-                        </section>
+                        </div>
                     </div>
-                </div>
-            </div>
+                </section>
 
-            <!-- TAB 2: STUDENT DIGITAL TWIN PROFILE -->
-            <div class="tab-pane" id="tab-digital-twin">
-                <div class="twin-selector-header">
-                    <label for="twin-student-selector">Focus Student Twin:</label>
-                    <select id="twin-student-selector">
-                        <!-- Loaded dynamically -->
-                    </select>
-                    <button class="btn btn-primary btn-sm" id="btn-print-report">
-                        <i class="fa-solid fa-file-pdf"></i> Generate Executive Report
-                    </button>
-                </div>
-                
-                <div class="twin-layout">
-                    <!-- Column 1: Spotify Wrapped / Netflix Profile & Traits -->
-                    <div class="twin-col-left">
-                        <!-- Student digital clone profile -->
-                        <section class="dashboard-card card-digital-profile">
-                            <div class="card-header">
-                                <h2><i class="fa-solid fa-circle-user text-gradient"></i> Behavioral Clone #<span id="twin-sid-label">101</span></h2>
-                                <span class="badge" id="twin-style-label">Visual</span>
-                            </div>
-                            <div class="card-body">
-                                <div class="clone-wrapped-layout">
-                                    <div class="clone-avatar-container">
-                                        <div class="clone-avatar-glow"></div>
-                                        <i class="fa-solid fa-user-astronaut"></i>
-                                    </div>
-                                    <div class="clone-metrics">
-                                        <h3 id="twin-name">Emma Watson</h3>
-                                        <p class="clone-subtitle">Behavior: <span id="twin-attention-label">Stable</span></p>
-                                        <div class="clone-stats-list">
-                                            <div class="clone-stat-row">
-                                                <span>Motivation:</span><strong id="twin-motivation">88%</strong>
-                                            </div>
-                                            <div class="clone-stat-row">
-                                                <span>Burnout Risk:</span><strong id="twin-burnout" class="text-green">Low</strong>
-                                            </div>
-                                            <div class="clone-stat-row">
-                                                <span>Stress Probability:</span><strong id="twin-stress">35%</strong>
-                                            </div>
-                                            <div class="clone-stat-row">
-                                                <span>CGPA:</span><strong id="twin-cgpa" class="text-gradient">8.90</strong>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <!-- Personality Discovery inferred traits -->
-                        <section class="dashboard-card card-personality-traits">
-                            <div class="card-header">
-                                <h2><i class="fa-solid fa-shapes"></i> Personality Discovery</h2>
-                                <span class="badge">Inferred Traits</span>
-                            </div>
-                            <div class="card-body">
-                                <div class="traits-bars-container" id="twin-traits-container">
-                                    <!-- Loaded dynamically -->
-                                </div>
-                            </div>
-                        </section>
-
-                        <!-- Gamification Streaks & Badges -->
-                        <section class="dashboard-card card-gamification">
-                            <div class="card-header">
-                                <h2><i class="fa-solid fa-medal text-yellow"></i> Gamification Achievements</h2>
-                            </div>
-                            <div class="card-body">
-                                <div class="game-stats">
-                                    <div class="game-badge-box">
-                                        <span class="game-label">Rank Level</span>
-                                        <span class="game-val" id="twin-game-level">Visionary</span>
-                                    </div>
-                                    <div class="game-badge-box">
-                                        <span class="game-label">Streak Day</span>
-                                        <span class="game-val text-orange" id="twin-game-streak"><i class="fa-solid fa-fire"></i> 14 Days</span>
-                                    </div>
-                                    <div class="game-badge-box">
-                                        <span class="game-label">XP points</span>
-                                        <span class="game-val text-cyan" id="twin-game-xp">11,200 XP</span>
-                                    </div>
-                                </div>
-                                <div class="badges-row-container">
-                                    <h4>Consistency Badges Earned</h4>
-                                    <div class="badges-flex-list" id="twin-badges-list">
-                                        <!-- Loaded dynamically -->
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
+                <!-- 2. Model Settings & Training Inputs -->
+                <section class="dashboard-card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-gears"></i> 2. Model Parameters & Features</h2>
                     </div>
-
-                    <!-- Column 2: Charts (Spider Radar, Trajectories) & Attention -->
-                    <div class="twin-col-mid">
-                        <section class="dashboard-card card-radar-spider">
-                            <div class="card-header">
-                                <h2><i class="fa-solid fa-circle-nodes"></i> Behaviour Radar</h2>
-                            </div>
-                            <div class="card-body">
-                                <div class="chart-wrapper">
-                                    <canvas id="behaviorRadarChart"></canvas>
-                                </div>
-                            </div>
-                        </section>
-
-                        <section class="dashboard-card card-trajectory-charts">
-                            <div class="card-header">
-                                <h2><i class="fa-solid fa-chart-area"></i> Behaviour Trajectory Map</h2>
-                                <span class="badge warning-badge">30-Day Growth</span>
-                            </div>
-                            <div class="card-body">
-                                <div class="chart-wrapper">
-                                    <canvas id="trajectoryLineChart"></canvas>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-
-                    <!-- Column 3: Attention Analytics & Knowledge Graph -->
-                    <div class="twin-col-right">
-                        <section class="dashboard-card card-attention-analytics">
-                            <div class="card-header">
-                                <h2><i class="fa-solid fa-eye-slash"></i> Attention Analytics</h2>
-                            </div>
-                            <div class="card-body">
-                                <ul class="attention-metrics-list">
-                                    <li>
-                                        <div class="att-meta">
-                                            <span class="att-title">Peak Study Hours</span>
-                                            <span class="att-val text-green" id="att-peak-hours">7:00 PM - 9:00 PM</span>
-                                        </div>
-                                        <p class="att-desc">Discovered most productive cognitive focus patterns.</p>
-                                    </li>
-                                    <li>
-                                        <div class="att-meta">
-                                            <span class="att-title">Assignment Timing</span>
-                                            <span class="att-val" id="att-asg-timing">2.5 days before deadline</span>
-                                        </div>
-                                        <p class="att-desc">Measures study planning consistency levels.</p>
-                                    </li>
-                                    <li>
-                                        <div class="att-meta">
-                                            <span class="att-title">Login Frequency</span>
-                                            <span class="att-val" id="att-login-freq">Daily</span>
-                                        </div>
-                                        <p class="att-desc">Telemetry access checks for course updates.</p>
-                                    </li>
-                                    <li>
-                                        <div class="att-meta">
-                                            <span class="att-title">Late Night usage rate</span>
-                                            <span class="att-val text-yellow" id="att-late-night">12%</span>
-                                        </div>
-                                        <p class="att-desc">High rates trigger fatigue and burnout alarms.</p>
-                                    </li>
-                                </ul>
-                            </div>
-                        </section>
-
-                        <!-- Collaboration network maps -->
-                        <section class="dashboard-card card-knowledge-graph">
-                            <div class="card-header">
-                                <h2><i class="fa-solid fa-diagram-project"></i> Behaviour Knowledge Graph</h2>
-                                <span class="badge accent-badge">Collaborations</span>
-                            </div>
-                            <div class="card-body">
-                                <p class="section-help">Physics network layout. Hover nodes to view ties, click to focus profile.</p>
-                                <div class="canvas-wrapper">
-                                    <canvas id="networkGraphCanvas"></canvas>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 3: FUTURE SIMULATOR & INTERVENTIONS -->
-            <div class="tab-pane" id="tab-future-simulator">
-                <div class="simulator-layout">
-                    <!-- Left: Control Sliders -->
-                    <section class="dashboard-card card-sim-sliders">
-                        <div class="card-header">
-                            <h2><i class="fa-solid fa-sliders"></i> Scenario Simulator Sandbox</h2>
-                            <span class="badge">What-If Scenarios</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="sim-student-header">
-                                <h3>Target Twin: <span id="sim-student-name">Emma Watson</span></h3>
-                            </div>
-                            <p class="section-help">Slide parameters to project grade change and dropout probability.</p>
-                            
-                            <!-- Slider 1 -->
-                            <div class="slider-group">
-                                <div class="slider-meta">
-                                    <span>Attendance Change</span>
-                                    <strong id="val-att-change" class="text-green">0%</strong>
-                                </div>
-                                <input type="range" id="slider-att" min="-50" max="50" value="0">
-                                <span class="slider-help">Drop in class session attendance rates</span>
-                            </div>
-                            
-                            <!-- Slider 2 -->
-                            <div class="slider-group">
-                                <div class="slider-meta">
-                                    <span>Assignment Completeness</span>
-                                    <strong id="val-asg-change" class="text-green">0%</strong>
-                                </div>
-                                <input type="range" id="slider-asg" min="-50" max="50" value="0">
-                                <span class="slider-help">Completeness and deadline upload timing</span>
-                            </div>
-                            
-                            <!-- Slider 3 -->
-                            <div class="slider-group">
-                                <div class="slider-meta">
-                                    <span>Engagement Intensity</span>
-                                    <strong id="val-eng-change" class="text-green">0%</strong>
-                                </div>
-                                <input type="range" id="slider-eng" min="-50" max="50" value="0">
-                                <span class="slider-help">Portal logs, forum postings, and chats</span>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Middle: Real-Time Predictions Output -->
-                    <section class="dashboard-card card-sim-outputs">
-                        <div class="card-header">
-                            <h2><i class="fa-solid fa-calculator"></i> Simulated Predictions</h2>
-                        </div>
-                        <div class="card-body">
-                            <div class="projection-stats-row">
-                                <div class="proj-box">
-                                    <span class="proj-lbl">Current CGPA</span>
-                                    <strong id="sim-curr-cgpa">8.90</strong>
-                                </div>
-                                <div class="proj-box highlight">
-                                    <span class="proj-lbl">Simulated CGPA</span>
-                                    <strong id="sim-new-cgpa" class="text-gradient">8.90</strong>
-                                </div>
-                                <div class="proj-box">
-                                    <span class="proj-lbl">CGPA Shift</span>
-                                    <strong id="sim-cgpa-diff" class="text-muted">0.00</strong>
-                                </div>
-                            </div>
-                            
-                            <div class="projection-alerts-box">
-                                <div class="proj-bar-row">
-                                    <div class="bar-lbl">Risk Increase: <span id="sim-risk-pct">0%</span></div>
-                                    <div class="bar-track"><div class="bar-fill bg-red" id="sim-risk-bar" style="width: 0%"></div></div>
-                                </div>
-                                <div class="proj-bar-row">
-                                    <div class="bar-lbl">Total Dropout Probability: <span id="sim-dropout-pct">5%</span></div>
-                                    <div class="bar-track"><div class="bar-fill bg-orange" id="sim-dropout-bar" style="width: 5%"></div></div>
-                                </div>
-                                <div class="proj-bar-row">
-                                    <div class="bar-lbl">Recovery Chance Index: <span id="sim-recovery-pct">95%</span></div>
-                                    <div class="bar-track"><div class="bar-fill bg-green" id="sim-recovery-bar" style="width: 95%"></div></div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Right: Recommendation Engine -->
-                    <section class="dashboard-card card-sim-recommendations">
-                        <div class="card-header">
-                            <h2><i class="fa-solid fa-wand-magic-sparkles text-gradient"></i> Intervention Recommendation Engine</h2>
-                        </div>
-                        <div class="card-body">
-                            <div class="intervention-picker-grid">
-                                <button class="btn btn-preset active" data-action="mentor_session">
-                                    <i class="fa-solid fa-chalkboard-user"></i> Mentorship
-                                </button>
-                                <button class="btn btn-preset" data-action="peer_learning">
-                                    <i class="fa-solid fa-users"></i> Peer Group
-                                </button>
-                                <button class="btn btn-preset" data-action="reduce_workload">
-                                    <i class="fa-solid fa-sheet-plastic"></i> Load Shedding
-                                </button>
-                                <button class="btn btn-preset" data-action="weekly_checkins">
-                                    <i class="fa-solid fa-calendar-check"></i> Check-ins
-                                </button>
-                            </div>
-                            
-                            <div class="recommendation-result-box" id="rec-outcome-box">
-                                <h3 id="rec-title">One-on-One Mentorship Session</h3>
-                                <div class="rec-metrics">
-                                    <div>Recovery Likelihood: <strong id="rec-recovery" class="text-green">92%</strong></div>
-                                    <div>Outcome: <strong id="rec-cgpa-boost" class="text-cyan">+0.4 CGPA potential</strong></div>
-                                    <div>Stress Relief: <strong id="rec-stress-impact">-15% stress level</strong></div>
-                                </div>
-                                <p id="rec-reason">Direct guidance addresses cognitive blocks and aligns focus strategies.</p>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-            </div>
-
-            <!-- TAB 4: AI BEHAVIOR COACH -->
-            <div class="tab-pane" id="tab-coach">
-                <div class="coach-layout">
-                    <!-- Left: Chat Panel -->
-                    <section class="dashboard-card card-chat-main">
-                        <div class="card-header">
-                            <h2><i class="fa-solid fa-robot text-gradient"></i> AI Behavioral Coach Chat</h2>
-                            <span class="badge warning-badge">Real-Time Support</span>
-                        </div>
-                        <div class="card-body chat-body-container">
-                            <div class="chat-messages-scroll" id="chat-messages-area">
-                                <div class="chat-message bot">
-                                    <div class="chat-avatar"><i class="fa-solid fa-robot"></i></div>
-                                    <div class="chat-text">
-                                        Hello! I'm your AI Behavioral Coach. Select a student twin above or ask questions directly like "Why is Student #102 underperforming?" or "How can I lower my burnout risk?" to receive Multi-Agent reasoning logs.
-                                    </div>
-                                </div>
-                            </div>
-                            <form id="chat-composer-form" class="chat-composer">
-                                <input type="text" id="chat-input" placeholder="Ask your AI behavior coach..." required>
-                                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Send</button>
-                            </form>
-                        </div>
-                    </section>
-
-                    <!-- Right: Multi-Agent Pipeline Trace -->
-                    <section class="dashboard-card card-agent-trace">
-                        <div class="card-header">
-                            <h2><i class="fa-solid fa-network-wired"></i> Multi-Agent Orchestration Log</h2>
-                            <span class="badge accent-badge">5 Active Nodes</span>
-                        </div>
-                        <div class="card-body">
-                            <p class="section-help">Click agent bubbles to view pipeline execution thoughts.</p>
-                            <div class="agents-bubble-flow">
-                                <div class="agent-node" data-agent="analyst" title="Analyst Agent">
-                                    <i class="fa-solid fa-magnifying-glass-chart"></i>
-                                    <span>Analyst</span>
-                                </div>
-                                <div class="agent-arrow"><i class="fa-solid fa-arrow-right"></i></div>
-                                <div class="agent-node" data-agent="predictor" title="Predictor Agent">
-                                    <i class="fa-solid fa-timeline"></i>
-                                    <span>Predictor</span>
-                                </div>
-                                <div class="agent-arrow"><i class="fa-solid fa-arrow-right"></i></div>
-                                <div class="agent-node" data-agent="alert" title="Alert Agent">
-                                    <i class="fa-solid fa-bell"></i>
-                                    <span>Alert</span>
-                                </div>
-                                <div class="agent-arrow"><i class="fa-solid fa-arrow-right"></i></div>
-                                <div class="agent-node" data-agent="explainer" title="Explainer Agent">
-                                    <i class="fa-solid fa-info-circle"></i>
-                                    <span>Explainer</span>
-                                </div>
-                                <div class="agent-arrow"><i class="fa-solid fa-arrow-right"></i></div>
-                                <div class="agent-node" data-agent="mentor" title="Mentor Agent">
-                                    <i class="fa-solid fa-chalkboard-user"></i>
-                                    <span>Mentor</span>
-                                </div>
-                            </div>
-                            
-                            <div class="agent-thought-logs">
-                                <div class="agent-thought-card" id="agent-thought-analyst">
-                                    <h4><i class="fa-solid fa-magnifying-glass-chart"></i> Analyst Agent</h4>
-                                    <p>Portal audit logs: Waiting for user chat request...</p>
-                                </div>
-                                <div class="agent-thought-card hide" id="agent-thought-predictor">
-                                    <h4><i class="fa-solid fa-timeline"></i> Predictor Agent</h4>
-                                    <p>Predictive grade forecasts: Idle...</p>
-                                </div>
-                                <div class="agent-thought-card hide" id="agent-thought-alert">
-                                    <h4><i class="fa-solid fa-bell"></i> Alert Agent</h4>
-                                    <p>Safety trigger scans: Monitoring...</p>
-                                </div>
-                                <div class="agent-thought-card hide" id="agent-thought-explainer">
-                                    <h4><i class="fa-solid fa-info-circle"></i> Explainer Agent</h4>
-                                    <p>Model transparency (SHAP): Idle...</p>
-                                </div>
-                                <div class="agent-thought-card hide" id="agent-thought-mentor">
-                                    <h4><i class="fa-solid fa-chalkboard-user"></i> Mentor Agent</h4>
-                                    <p>Academic action prescriptive recipes: Waiting...</p>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-            </div>
-
-            <!-- TAB 5: ML BEHAVIOR SANDBOX -->
-            <div class="tab-pane" id="tab-sandbox-model">
-                <div class="sandbox-layout">
-                    <!-- Left: Model Control parameters -->
-                    <section class="dashboard-card card-sandbox-params">
-                        <div class="card-header">
-                            <h2><i class="fa-solid fa-sliders"></i> Universal Sandbox Ingestion</h2>
-                        </div>
-                        <div class="card-body">
-                            <!-- Ingestion parameters -->
+                    <div class="card-body">
+                        <form id="train-config-form">
                             <div class="form-group">
-                                <label for="sandbox-dataset-select">Select Behavior Dataset Domain</label>
-                                <select id="sandbox-dataset-select">
-                                    <option value="students">Student Study Loops 🏫</option>
-                                    <option value="saas">SaaS Workspace Actions 💻</option>
-                                    <option value="ecommerce">E-Commerce Shopper Paths 🛍</option>
-                                    <option value="gaming">Gaming Skill Progressions 🎮</option>
-                                    <option value="custom">Upload Custom CSV/JSON File 📤</option>
+                                <label for="model-select">Algorithm Architecture</label>
+                                <select id="model-select">
+                                    <option value="LSTM">Long Short-Term Memory (LSTM)</option>
+                                    <option value="Transformer">Transformer Encoder Network</option>
+                                    <option value="XGBoost">Gradient Boosting Trees (XGBoost)</option>
+                                    <option value="Random Forest">Ensemble Decision Forest (Random Forest)</option>
+                                    <option value="Neural Network">Multilayer Perceptron Neural Net (MLP)</option>
                                 </select>
                             </div>
-                            
-                            <div id="sandbox-upload-group" class="form-group hide">
-                                <label for="sandbox-dataset-file">Upload Behavior Records (.csv, .json)</label>
-                                <input type="file" id="sandbox-dataset-file" accept=".csv,.json">
+
+                            <div class="form-group">
+                                <label for="optimizer-select">Optimization Solver</label>
+                                <select id="optimizer-select">
+                                    <option value="Adam">Adam (Adaptive Moment Estimation)</option>
+                                    <option value="SGD">SGD (Stochastic Gradient Descent)</option>
+                                    <option value="RMSprop">RMSprop (Root Mean Squared Propagation)</option>
+                                </select>
                             </div>
 
-                            <!-- Ingested preview container -->
-                            <div class="form-group">
-                                <label>Behavior Dataset Preview (First 5 Rows)</label>
-                                <div id="sandbox-preview-container" style="max-height: 120px; overflow-y: auto; background: rgba(255,255,255,0.7); border: 2px solid rgba(15,23,42,0.05); border-radius: 12px; font-size: 0.72rem; padding: 0.5rem;">
-                                    <div id="sandbox-preview-empty" class="text-muted" style="text-align: center; padding: 0.5rem 0;">No dataset loaded yet</div>
-                                    <table id="sandbox-preview-table" class="comparison-table hide" style="margin: 0; font-size: 0.7rem; width: 100%;">
-                                        <thead id="sandbox-preview-thead"></thead>
-                                        <tbody id="sandbox-preview-tbody"></tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            
-                            <form id="sandbox-config-form" style="border-top: 2px solid rgba(15,23,42,0.03); padding-top: 0.75rem;">
+                            <div class="stats-grid">
                                 <div class="form-group">
-                                    <label for="sandbox-model-select">Select Algorithm</label>
-                                    <select id="sandbox-model-select">
-                                        <option value="LSTM">Recurrent Network (LSTM)</option>
-                                        <option value="Transformer">Transformer Encoder</option>
-                                        <option value="XGBoost">Gradient Boosting (XGBoost)</option>
-                                        <option value="Random Forest">Decision Forests (Random Forest)</option>
-                                        <option value="Neural Network">Multilayer Perceptron (MLP)</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label>Training Epochs</label>
+                                    <label>Epochs</label>
                                     <div class="slider-meta">
-                                        <span class="slider-help">Iterations count</span>
-                                        <strong id="sandbox-epochs-val">15</strong>
+                                        <strong id="epochs-val">15</strong>
                                     </div>
-                                    <input type="range" id="sandbox-epochs" min="5" max="30" value="15">
+                                    <input type="range" id="epochs-slider" min="5" max="50" value="15">
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <label>Learning Rate</label>
                                     <div class="slider-meta">
-                                        <span class="slider-help">Stochastic step size</span>
-                                        <strong id="sandbox-lr-val">0.001</strong>
+                                        <strong id="lr-val">0.0010</strong>
                                     </div>
-                                    <input type="range" id="sandbox-lr" min="1" max="100" value="10">
+                                    <input type="range" id="lr-slider" min="1" max="100" value="10">
                                 </div>
-                                
-                                <button type="submit" class="btn btn-primary" id="btn-sandbox-train">
-                                    <i class="fa-solid fa-dumbbell"></i> Run Algorithmic Sandbox
+                            </div>
+
+                            <!-- Target and Feature selectors -->
+                            <div class="form-group">
+                                <label for="target-select">Target Column (Y Variable)</label>
+                                <select id="target-select"></select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Input Features Selector (X Variables)</label>
+                                <div id="features-checkboxes" class="checkbox-container-list"></div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" id="btn-train-engine" style="width: 100%;">
+                                <i class="fa-solid fa-dumbbell"></i> Fit Model Parameters
+                            </button>
+                        </form>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column: Training Telemetry & Predictions -->
+            <div class="workspace-col col-right">
+                <!-- 3. Training Logs & Graphs -->
+                <section class="dashboard-card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-chart-line"></i> 3. Optimization Curve & Epoch Logs</h2>
+                    </div>
+                    <div class="card-body grid-split-right">
+                        <div class="chart-wrapper">
+                            <canvas id="lossChart"></canvas>
+                        </div>
+                        <div class="console-wrapper">
+                            <div class="console-header">
+                                <span>Epoch Telemetry Log Console</span>
+                            </div>
+                            <div class="console-output" id="telemetry-console">Ready to initialize training...</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. Validation Metrics & Feature Weights -->
+                <section class="dashboard-card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-square-poll-vertical"></i> 4. Evaluation Metrics & Feature Importance</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="stats-grid">
+                            <div class="stat-box">
+                                <span class="stat-label">Model Accuracy</span>
+                                <span class="stat-value text-indigo" id="metrics-acc">--</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="stat-label">Model F1-Score</span>
+                                <span class="stat-value" id="metrics-f1">--</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="stat-label">Model Precision</span>
+                                <span class="stat-value" id="metrics-prec">--</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="stat-label">Model Recall</span>
+                                <span class="stat-value" id="metrics-rec">--</span>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper" style="height: 220px; margin-top: 1rem;">
+                            <canvas id="importanceChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. Inference Sandbox -->
+                <section class="dashboard-card" id="inference-card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-microchip"></i> 5. Live Inference Playground</h2>
+                    </div>
+                    <div class="card-body">
+                        <div id="inference-unlocked-message" class="text-muted text-center" style="padding: 1.5rem 0;">
+                            Fit the model parameters above to unlock prediction capabilities.
+                        </div>
+                        <div id="inference-form-container" class="hide">
+                            <form id="inference-form">
+                                <div id="dynamic-inference-fields" class="inference-fields-grid"></div>
+                                <button type="submit" class="btn btn-primary" id="btn-run-inference" style="margin-top: 1rem; width: 100%;">
+                                    <i class="fa-solid fa-bolt"></i> Generate Target Forecast
                                 </button>
                             </form>
+                            <div id="inference-results" class="hide" style="margin-top: 1.25rem; border-top: 1px solid #e2e8f0; padding-top: 1rem;">
+                                <h4 style="font-size: 0.85rem; font-weight: 700; color: #1e293b; margin-bottom: 0.75rem;">Forecast Probability Distribution:</h4>
+                                <div id="inference-probability-bars" style="display: flex; flex-direction: column; gap: 0.6rem;"></div>
+                            </div>
                         </div>
-                    </section>
-
-                    <!-- Right: Results and comparisons -->
-                    <div class="sandbox-results-panel">
-                        <section class="dashboard-card card-sandbox-metrics">
-                            <div class="card-header">
-                                <h2><i class="fa-solid fa-gauge"></i> Sandbox Metrics</h2>
-                            </div>
-                            <div class="card-body">
-                                <div class="stats-grid">
-                                    <div class="stat-box">
-                                        <span class="stat-label">Model Accuracy</span>
-                                        <span class="stat-value text-green" id="sandbox-acc">--</span>
-                                    </div>
-                                    <div class="stat-box">
-                                        <span class="stat-label">Model Precision</span>
-                                        <span class="stat-value" id="sandbox-prec">--</span>
-                                    </div>
-                                    <div class="stat-box">
-                                        <span class="stat-label">Model Recall</span>
-                                        <span class="stat-value" id="sandbox-rec">--</span>
-                                    </div>
-                                    <div class="stat-box">
-                                        <span class="stat-label">Fitting speed</span>
-                                        <span class="stat-value text-cyan" id="sandbox-time">--</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <section class="dashboard-card card-sandbox-loss-chart">
-                            <div class="card-header">
-                                <h2><i class="fa-solid fa-chart-line"></i> Optimization Loss Decay Curve</h2>
-                            </div>
-                            <div class="card-body">
-                                <div class="chart-wrapper">
-                                    <canvas id="sandboxLossChart"></canvas>
-                                </div>
-                            </div>
-                        </section>
-
-                        <!-- Predictor Section -->
-                        <section class="dashboard-card card-sandbox-predict">
-                            <div class="card-header">
-                                <h2><i class="fa-solid fa-magic"></i> Live Action Predictor 🔮</h2>
-                            </div>
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label>Enter Behavior Event Sequence</label>
-                                    <div class="input-action-group">
-                                        <input type="text" id="sandbox-seq-input" placeholder="e.g. login, view_item, add_to_cart">
-                                        <button class="btn btn-primary" id="btn-sandbox-predict" disabled>
-                                            <i class="fa-solid fa-bolt"></i> Predict Next
-                                        </button>
-                                    </div>
-                                    <span class="slider-help" style="margin-top: 0.1rem; display: block;">Separate events with commas. Model training unlocks inference.</span>
-                                </div>
-                                <div id="sandbox-predict-results" class="hide" style="display: flex; flex-direction: column; gap: 0.5rem;">
-                                    <h4 style="font-size: 0.8rem; font-weight: 800; color: var(--purple-neon); margin-top: 0.25rem;">Next Action Probabilities:</h4>
-                                    <div id="sandbox-predict-bars" style="display: flex; flex-direction: column; gap: 0.5rem;"></div>
-                                </div>
-                            </div>
-                        </section>
                     </div>
-                </div>
+                </section>
             </div>
-
-            <!-- TAB 6: DEVELOPER MODE & PYTORCH TELEMETRY (100% Backward Compatible) -->
-            <div class="tab-pane" id="tab-dev-control">
-                <div class="sandbox-layout">
-                    <!-- Left: Ingestion and simulator -->
-                    <section class="dashboard-card card-simulator">
-                        <div class="card-header">
-                            <h2><i class="fa-solid fa-gamepad"></i> Simulated Interaction Controller</h2>
-                            <span class="badge accent-badge">Dev Endpoint</span>
-                        </div>
-                        <div class="card-body">
-                            <!-- Behavioral Domain Preset Selector -->
-                            <div class="form-group">
-                                <label>Behavioral Domain Preset</label>
-                                <div class="domain-selector-grid">
-                                    <button class="domain-btn active" data-domain="saas">
-                                        <i class="fa-solid fa-network-wired text-blue"></i>
-                                        <span>SaaS App</span>
-                                    </button>
-                                    <button class="domain-btn" data-domain="gaming">
-                                        <i class="fa-solid fa-gamepad text-green"></i>
-                                        <span>Gaming</span>
-                                    </button>
-                                    <button class="domain-btn" data-domain="media">
-                                        <i class="fa-solid fa-photo-film text-purple"></i>
-                                        <span>Streaming</span>
-                                    </button>
-                                    <button class="domain-btn" data-domain="ecommerce">
-                                        <i class="fa-solid fa-bag-shopping text-cyan"></i>
-                                        <span>E-Commerce</span>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- User Profile Selector -->
-                            <div class="form-group">
-                                <label for="user-selector">Target User ID</label>
-                                <div class="input-action-group">
-                                    <select id="user-selector">
-                                        <!-- Loaded dynamically -->
-                                    </select>
-                                    <button class="btn btn-secondary" id="btn-new-user" title="Generate New User ID">
-                                        <i class="fa-solid fa-user-plus"></i> New User
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Preset Events Trigger -->
-                            <div class="preset-triggers">
-                                <h3>Ingest User Action</h3>
-                                <p class="section-help">Clicking a button feeds this action into the user's history sequence.</p>
-                                <div class="preset-grid" id="preset-actions-grid">
-                                    <!-- Populated dynamically by app.js -->
-                                </div>
-                            </div>
-
-                            <!-- Custom Event Form -->
-                            <div class="custom-event-section">
-                                <h3>Custom Action Ingester</h3>
-                                <form id="custom-event-form">
-                                    <div class="input-action-group">
-                                        <input type="text" id="custom-action-input" placeholder="e.g. click_upgrade, open_share_modal" required>
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="fa-solid fa-paper-plane"></i> Send
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-
-                            <!-- Live Event Stream Feed -->
-                            <div class="event-stream-section">
-                                <h3>Session Event Feed</h3>
-                                <div class="stream-feed-wrapper" id="stream-feed-wrapper">
-                                    <div class="empty-feed-placeholder" id="empty-feed-placeholder">
-                                        <i class="fa-solid fa-stream-slash"></i>
-                                        <p>No activity logged. Trigger events to see event streams.</p>
-                                    </div>
-                                    <ul class="stream-feed-list" id="stream-feed-list"></ul>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Right: Predictions and Telemetry -->
-                    <div class="dev-telemetry-right">
-                        <!-- Predictions Panel -->
-                        <section class="dashboard-card card-predictions">
-                            <div class="card-header">
-                                <h2><i class="fa-solid fa-wand-magic-sparkles text-gradient"></i> AI Prediction Dashboard</h2>
-                                <span class="badge prediction-badge">RNN Live</span>
-                            </div>
-                            <div class="card-body">
-                                <div class="timeline-container">
-                                    <h3>Active Behavioral Sequence</h3>
-                                    <div class="sequence-timeline" id="sequence-timeline">
-                                        <div class="empty-timeline-placeholder" id="empty-timeline-placeholder">
-                                            <i class="fa-solid fa-history"></i>
-                                            <p>Timeline empty. Ingest events for the target user above.</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="predictions-container">
-                                    <div class="predict-header-row">
-                                        <h3>Next Action Probability Forecast</h3>
-                                        <button class="btn btn-sm btn-icon" id="btn-force-predict" title="Re-fetch predictions">
-                                            <i class="fa-solid fa-sync"></i>
-                                        </button>
-                                    </div>
-                                    <div class="predictions-wrapper" id="predictions-wrapper">
-                                        <div class="empty-predictions-placeholder" id="empty-predictions-placeholder">
-                                            <i class="fa-solid fa-chart-line"></i>
-                                            <p>Build user history timeline to display RNN forecasting charts.</p>
-                                        </div>
-                                        <div class="predictions-list" id="predictions-list" style="display: none;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <!-- Telemetry Stats Panel -->
-                        <section class="dashboard-card card-telemetry">
-                            <div class="card-header">
-                                <h2><i class="fa-solid fa-microchip"></i> Model Configuration</h2>
-                                <span class="badge">LSTM Network</span>
-                            </div>
-                            <div class="card-body">
-                                <div class="stats-grid">
-                                    <div class="stat-box">
-                                        <span class="stat-label">Model Weights File</span>
-                                        <span class="stat-value" id="model-loaded-val">--</span>
-                                    </div>
-                                    <div class="stat-box">
-                                        <span class="stat-label">Active Profiles</span>
-                                        <span class="stat-value" id="active-users-val">--</span>
-                                    </div>
-                                    <div class="stat-box">
-                                        <span class="stat-label">Total Logs Ingested</span>
-                                        <span class="stat-value" id="total-events-val">--</span>
-                                    </div>
-                                    <div class="stat-box">
-                                        <span class="stat-label">File Weight</span>
-                                        <span class="stat-value" id="weight-size-val">--</span>
-                                    </div>
-                                </div>
-
-                                <table class="config-table">
-                                    <tr><td>Embedding Size:</td><td id="cfg-embedding" class="table-val">--</td></tr>
-                                    <tr><td>LSTM Hidden Dimension:</td><td id="cfg-hidden" class="table-val">--</td></tr>
-                                    <tr><td>Network Layer Depth:</td><td id="cfg-layers" class="table-val">--</td></tr>
-                                    <tr><td>Maximum Seq Memory:</td><td id="cfg-seq-len" class="table-val">--</td></tr>
-                                    <tr><td>Weight File Modified:</td><td id="cfg-modified" class="table-val select-all">--</td></tr>
-                                </table>
-
-                                <div class="actions-section">
-                                    <h3>Training Sandbox Actions</h3>
-                                    <div class="btn-group">
-                                        <button class="btn btn-secondary" id="btn-simulate">
-                                            <i class="fa-solid fa-database"></i> Batch Simulate Profiles
-                                        </button>
-                                        <button class="btn btn-primary" id="btn-train">
-                                            <i class="fa-solid fa-dumbbell"></i> Fit LSTM Model
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="console-wrapper">
-                                    <pre class="console-output" id="console-output">SYSTEM: Developer console active...</pre>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                </div>
-            </div>
-
         </main>
         
-        <footer class="app-footer-info">
-            <p>Manovra Academy Analytics Suite &bull; FastAPI + PyTorch + Scikit-Learn Engine</p>
+        <footer class="app-footer">
+            <p>Enterprise AI Predictor Console &bull; High-Performance Universal Behavior Modeling Engine</p>
         </footer>
     </div>
-
-    <!-- Executive Print Report Markup Template -->
-    <div id="print-report-template" class="print-report-container hide">
-        <div class="print-header">
-            <div class="print-logo">
-                <i class="fa-solid fa-brain"></i>
-                <h2>MANOVRA ACADEMY ANALYTICS BRIEF</h2>
-            </div>
-            <div class="print-meta">
-                <div>Date Generated: <span id="print-date">July 2, 2026</span></div>
-                <div>Status: <span class="print-badge">CONFIDENTIAL</span></div>
-            </div>
-        </div>
-        <hr/>
-        <div class="print-profile-summary">
-            <h3>Student Digital Twin Profile summary</h3>
-            <table class="print-table">
-                <tr><th>Student Name</th><td id="print-name">--</td><th>Student ID</th><td id="print-sid">--</td></tr>
-                <tr><th>CGPA</th><td id="print-cgpa">--</td><th>Learning Style</th><td id="print-style">--</td></tr>
-                <tr><th>Motivation Score</th><td id="print-motivation">--</td><th>Stress Index</th><td id="print-stress">--</td></tr>
-                <tr><th>Burnout Risk Tier</th><td id="print-burnout" style="font-weight:bold;">--</td><th>Attention Trend</th><td id="print-attention">--</td></tr>
-            </table>
-        </div>
-        
-        <div class="print-insights-section">
-            <h3>GenAI Behaviour Insight Analysis</h3>
-            <div class="print-insight-box" id="print-insight-box">
-                <!-- Loaded dynamically -->
-            </div>
-        </div>
-
-        <div class="print-radar-traits">
-            <div class="print-column">
-                <h3>Attention Telemetry</h3>
-                <ul class="print-list" id="print-attention-list">
-                    <!-- Loaded dynamically -->
-                </ul>
-            </div>
-            <div class="print-column">
-                <h3>Explainable AI Feature Contributions</h3>
-                <ul class="print-list" id="print-explain-list">
-                    <!-- Loaded dynamically -->
-                </ul>
-            </div>
-        </div>
-        
-        <div class="print-footer">
-            <p>This document contains predictive machine learning summaries. Decisions should be verified with academic advisors.</p>
-            <p>Generated by Manovra Multi-Agent Engine v0.1.0</p>
-        </div>
-    </div>
-
-    <!-- Script -->
-    <script src="/static/app.js"></script>
 </body>
 </html>
