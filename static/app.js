@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         return { x: p.x, y: p.y, sid: p.user_id, name: p.name, cgpa: p.cgpa, risk: p.burnout_risk };
                     }),
                     backgroundColor: c.color,
-                    borderColor: 'rgba(255,255,255,0.1)',
+                    borderColor: 'rgba(15,23,42,0.1)',
                     borderWidth: 1,
                     pointRadius: 7,
                     pointHoverRadius: 9
@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { labels: { color: '#94a3b8', font: { family: 'Outfit' } } },
+                        legend: { labels: { color: '#475569', font: { family: 'Outfit' } } },
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
@@ -236,8 +236,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     },
                     scales: {
-                        x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#64748b' }, title: { display: true, text: 'Academic Engagement Dimension', color: '#64748b' } },
-                        y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#64748b' }, title: { display: true, text: 'Stress & Cognitive Burnout', color: '#64748b' } }
+                        x: { grid: { color: 'rgba(15,23,42,0.05)' }, ticks: { color: '#475569' }, title: { display: true, text: 'Academic Engagement Dimension', color: '#475569' } },
+                        y: { grid: { color: 'rgba(15,23,42,0.05)' }, ticks: { color: '#475569' }, title: { display: true, text: 'Stress & Cognitive Burnout', color: '#475569' } }
                     },
                     onClick: (event, elements) => {
                         if (elements.length > 0) {
@@ -405,9 +405,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 plugins: { legend: { display: false } },
                 scales: {
                     r: {
-                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                        angleLines: { color: 'rgba(255, 255, 255, 0.05)' },
-                        pointLabels: { color: '#94a3b8', font: { family: 'Outfit', size: 9 } },
+                        grid: { color: 'rgba(15, 23, 42, 0.06)' },
+                        angleLines: { color: 'rgba(15, 23, 42, 0.06)' },
+                        pointLabels: { color: '#475569', font: { family: 'Outfit', size: 9 } },
                         ticks: { display: false },
                         min: 0,
                         max: 100
@@ -489,11 +489,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { labels: { color: '#94a3b8', font: { family: 'Outfit', size: 9 } } }
+                    legend: { labels: { color: '#475569', font: { family: 'Outfit', size: 9 } } }
                 },
                 scales: {
-                    x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 8 } } },
-                    y: { grid: { color: 'rgba(255, 255, 255, 0.03)' }, ticks: { color: '#64748b', font: { size: 8 } }, min: 0, max: 100 }
+                    x: { grid: { display: false }, ticks: { color: '#475569', font: { size: 8 } } },
+                    y: { grid: { color: 'rgba(15, 23, 42, 0.05)' }, ticks: { color: '#475569', font: { size: 8 } }, min: 0, max: 100 }
                 }
             }
         });
@@ -641,7 +641,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.clearRect(0, 0, width, height);
             
             // Draw links
-            ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+            ctx.strokeStyle = 'rgba(15,23,42,0.08)';
             ctx.lineWidth = 1;
             graphLinks.forEach(l => {
                 ctx.beginPath();
@@ -672,7 +672,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ctx.fill();
                 ctx.shadowBlur = 0;
                 
-                ctx.fillStyle = (n.id === activeStudentTwin) ? '#ffffff' : '#64748b';
+                ctx.fillStyle = (n.id === activeStudentTwin) ? '#0f172a' : '#475569';
                 ctx.font = '8px Outfit';
                 ctx.textAlign = 'center';
                 ctx.fillText(n.label.split(' ')[0], n.x, n.y - n.r - 3);
@@ -1000,8 +1000,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
-                    x: { grid: { display: false }, ticks: { color: '#64748b' } },
-                    y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#64748b' } }
+                    x: { grid: { display: false }, ticks: { color: '#475569' } },
+                    y: { grid: { color: 'rgba(15,23,42,0.05)' }, ticks: { color: '#475569' } }
                 }
             }
         });
