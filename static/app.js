@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const API_STUDENT_KNOWLEDGE_GRAPH = '/api/v1/student/knowledge-graph';
     const API_STUDENT_COHORT = '/api/v1/student/cohort/compare';
     const API_SANDBOX_TRAIN = '/api/v1/student/sandbox/train';
+    const API_SANDBOX_PREDICT = '/api/v1/student/sandbox/predict';
 
     // State Variables
     let currentDomain = 'saas';
@@ -927,6 +928,133 @@ document.addEventListener('DOMContentLoaded', () => {
     const sandboxForm = document.getElementById('sandbox-config-form');
     const epochsSlider = document.getElementById('sandbox-epochs');
     const lrSlider = document.getElementById('sandbox-lr');
+    const datasetSelect = document.getElementById('sandbox-dataset-select');
+    const uploadGroup = document.getElementById('sandbox-upload-group');
+    const fileInput = document.getElementById('sandbox-dataset-file');
+    const previewEmpty = document.getElementById('sandbox-preview-empty');
+    const previewTable = document.getElementById('sandbox-preview-table');
+    const previewThead = document.getElementById('sandbox-preview-thead');
+    const previewTbody = document.getElementById('sandbox-preview-tbody');
+    const btnPredict = document.getElementById('btn-sandbox-predict');
+    const seqInput = document.getElementById('sandbox-seq-input');
+    const predictResults = document.getElementById('sandbox-predict-results');
+    const predictBars = document.getElementById('sandbox-predict-bars');
+
+    let trainedModelType = null;
+
+    // Preset data for sandbox previews
+    const presetDatasets = {
+        students: {
+            headers: ["Student ID", "Name", "Motivation", "Attention", "CGPA"],
+            rows: [
+                ["101", "Emma Watson", "82%", "Stable", "7.45"],
+                ["102", "Liam Neeson", "42%", "Declining", "6.20"],
+                ["103", "Olivia Rodrigo", "82%", "Declining", "8.20"],
+                ["104", "Noah Centineo", "75%", "Improving", "7.95"],
+                ["105", "Sophia Loren", "94%", "Stable", "9.50"]
+            ]
+        },
+        saas: {
+            headers: ["User ID", "Org Domain", "Active Projects", "Daily Logins", "Errors Rate"],
+            rows: [
+                ["saas_981", "acme.com", "12", "45", "0.2%"],
+                ["saas_982", "globex.org", "3", "8", "1.5%"],
+                ["saas_983", "umbrella.corp", "24", "110", "0.05%"],
+                ["saas_984", "stark.tech", "55", "320", "0.8%"],
+                ["saas_985", "tyrell.io", "7", "18", "2.1%"]
+            ]
+        },
+        ecommerce: {
+            headers: ["Session ID", "Item Category", "Cart Adds", "Clicks count", "Total Spend"],
+            rows: [
+                ["shop_001", "Electronics", "3", "18", "$245.00"],
+                ["shop_002", "Apparel & Shoes", "1", "4", "$39.99"],
+                ["shop_003", "Home Goods", "0", "2", "$0.00"],
+                ["shop_004", "Books", "5", "12", "$84.50"],
+                ["shop_005", "Outdoor Gear", "2", "9", "$120.00"]
+            ]
+        },
+        gaming: {
+            headers: ["Player ID", "Matchmaking Tier", "Matches Played", "Win Rate", "K/D Ratio"],
+            rows: [
+                ["gamer_alpha", "Diamond I", "340", "58.2%", "1.42"],
+                ["gamer_beta", "Gold III", "125", "49.5%", "0.95"],
+                ["gamer_gamma", "Bronze II", "45", "38.0%", "0.62"],
+                ["gamer_delta", "Challenger", "1250", "64.1%", "2.10"],
+                ["gamer_epsilon", "Platinum IV", "450", "52.4%", "1.15"]
+            ]
+        }
+    };
+
+    function renderPreviewTable(headers, rows) {
+        previewEmpty.classList.add('hide');
+        previewTable.classList.remove('hide');
+        
+        // Render headers
+        previewThead.innerHTML = `<tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>`;
+        
+        // Render rows
+        previewTbody.innerHTML = rows.map(r => `<tr>${r.map(val => `<td>${val}</td>`).join('')}</tr>`).join('');
+    }
+
+    // Default load
+    if (previewEmpty && previewTable && previewThead && previewTbody) {
+        renderPreviewTable(presetDatasets.students.headers, presetDatasets.students.rows);
+    }
+
+    if (datasetSelect) {
+        datasetSelect.addEventListener('change', (e) => {
+            const val = e.target.value;
+            if (val === 'custom') {
+                uploadGroup.classList.remove('hide');
+                previewEmpty.classList.remove('hide');
+                previewTable.classList.add('hide');
+                previewEmpty.textContent = "Upload a CSV/JSON file to preview";
+            } else {
+                uploadGroup.classList.add('hide');
+                const data = presetDatasets[val];
+                if (data) {
+                    renderPreviewTable(data.headers, data.rows);
+                }
+            }
+        });
+    }
+
+    if (fileInput) {
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                try {
+                    const content = evt.target.result;
+                    if (file.name.endsWith('.json')) {
+                        const parsed = JSON.parse(content);
+                        const list = Array.isArray(parsed) ? parsed : (parsed.rows || parsed.data || []);
+                        if (list.length === 0) throw new Error("Empty array");
+                        
+                        const headers = Object.keys(list[0]);
+                        const rows = list.slice(0, 5).map(item => headers.map(h => String(item[h] ?? '')));
+                        renderPreviewTable(headers, rows);
+                    } else {
+                        // CSV parsing
+                        const lines = content.split('\n').map(l => l.trim()).filter(Boolean);
+                        if (lines.length === 0) throw new Error("Empty file");
+                        
+                        const headers = lines[0].split(',').map(h => h.trim());
+                        const rows = lines.slice(1, 6).map(l => l.split(',').map(val => val.trim()));
+                        renderPreviewTable(headers, rows);
+                    }
+                } catch (err) {
+                    previewEmpty.classList.remove('hide');
+                    previewTable.classList.add('hide');
+                    previewEmpty.textContent = "Error parsing file. Ensure it is a valid CSV or JSON list.";
+                }
+            };
+            reader.readAsText(file);
+        });
+    }
 
     epochsSlider.addEventListener('input', (e) => {
         document.getElementById('sandbox-epochs-val').textContent = e.target.value;
@@ -968,6 +1096,13 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Plot loss curve
             renderSandboxLossChart(data.loss_history);
+
+            // Unlock predictor!
+            trainedModelType = model;
+            if (btnPredict) {
+                btnPredict.removeAttribute('disabled');
+                seqInput.placeholder = "e.g. login, search, add_to_cart";
+            }
         } catch (err) {
             console.error("Sandbox ML training failed", err);
         } finally {
@@ -975,6 +1110,55 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.innerHTML = '<i class="fa-solid fa-dumbbell"></i> Run Algorithmic Sandbox';
         }
     });
+
+    if (btnPredict) {
+        btnPredict.addEventListener('click', async () => {
+            const seqText = seqInput.value.trim();
+            if (!seqText) return;
+            const sequence = seqText.split(',').map(s => s.trim()).filter(Boolean);
+            if (sequence.length === 0) return;
+
+            btnPredict.disabled = true;
+            btnPredict.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Running...';
+
+            try {
+                const res = await fetch(API_SANDBOX_PREDICT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        model_type: trainedModelType || 'LSTM',
+                        sequence: sequence
+                    })
+                });
+                if (!res.ok) throw new Error();
+                const data = await res.json();
+
+                // Display results
+                predictResults.classList.remove('hide');
+                predictBars.innerHTML = data.predictions.map((p, idx) => {
+                    const colors = ['bg-green', 'bg-orange', 'bg-red'];
+                    const color = colors[idx % colors.length];
+                    const pct = Math.round(p.probability * 100);
+                    return `
+                        <div class="proj-bar-row">
+                            <div class="bar-lbl" style="display:flex; justify-content:space-between;">
+                                <span>${p.predicted_action}</span>
+                                <strong>${pct}%</strong>
+                            </div>
+                            <div class="bar-track">
+                                <div class="bar-fill ${color}" style="width: ${pct}%;"></div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (err) {
+                console.error("Prediction inference failed", err);
+            } finally {
+                btnPredict.disabled = false;
+                btnPredict.innerHTML = '<i class="fa-solid fa-bolt"></i> Predict Next';
+            }
+        });
+    }
 
     function renderSandboxLossChart(lossHistory) {
         const labels = lossHistory.map(h => `Epoch ${h.epoch}`);

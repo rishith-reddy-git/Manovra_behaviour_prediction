@@ -628,3 +628,66 @@ def get_genai_insights(student_id: str):
         "student_id": student_id,
         "insight": text
     }
+
+# -------------------------------------------------------------
+# 7. UNIVERSAL INFERENCE PLAYGROUND
+# -------------------------------------------------------------
+class PredictSandboxInput(BaseModel):
+    model_type: str
+    sequence: List[str]
+
+@router.post("/sandbox/predict")
+def predict_sandbox_inference(payload: PredictSandboxInput):
+    """
+    Run simulated inference on custom uploaded sequences for general behavior predictions.
+    """
+    model = payload.model_type
+    seq = payload.sequence
+    
+    if not seq:
+        raise HTTPException(status_code=400, detail="Sequence cannot be empty")
+        
+    last_action = seq[-1].lower()
+    
+    # Pre-populate custom predictions based on common action names to make it responsive
+    hash_val = int(hashlib.md5(last_action.encode()).hexdigest(), 16)
+    
+    if "cart" in last_action or "checkout" in last_action:
+        predictions = [
+            {"predicted_action": "purchase_complete", "probability": 0.70},
+            {"predicted_action": "view_item", "probability": 0.20},
+            {"predicted_action": "logout", "probability": 0.10}
+        ]
+    elif "login" in last_action:
+        predictions = [
+            {"predicted_action": "view_dashboard", "probability": 0.60},
+            {"predicted_action": "create_project", "probability": 0.25},
+            {"predicted_action": "logout", "probability": 0.15}
+        ]
+    elif "submit" in last_action or "study" in last_action or "resource" in last_action:
+        predictions = [
+            {"predicted_action": "assignment_submission", "probability": 0.55},
+            {"predicted_action": "quiz_attempt", "probability": 0.30},
+            {"predicted_action": "logout", "probability": 0.15}
+        ]
+    elif "play" in last_action or "search" in last_action:
+        predictions = [
+            {"predicted_action": "pause_media", "probability": 0.50},
+            {"predicted_action": "add_to_favorites", "probability": 0.35},
+            {"predicted_action": "share_media", "probability": 0.15}
+        ]
+    else:
+        # Generic action fallback
+        actions_pool = ["view_item", "add_to_cart", "play_media", "complete_quest", "deploy_service", "logout"]
+        selected = [actions_pool[(hash_val + i) % len(actions_pool)] for i in range(3)]
+        predictions = [
+            {"predicted_action": selected[0], "probability": 0.60},
+            {"predicted_action": selected[1], "probability": 0.25},
+            {"predicted_action": selected[2], "probability": 0.15}
+        ]
+        
+    return {
+        "model": model,
+        "input_sequence": seq,
+        "predictions": predictions
+    }

@@ -590,10 +590,39 @@
                     <!-- Left: Model Control parameters -->
                     <section class="dashboard-card card-sandbox-params">
                         <div class="card-header">
-                            <h2><i class="fa-solid fa-sliders"></i> Algorithmic Sandbox Config</h2>
+                            <h2><i class="fa-solid fa-sliders"></i> Universal Sandbox Ingestion</h2>
                         </div>
                         <div class="card-body">
-                            <form id="sandbox-config-form">
+                            <!-- Ingestion parameters -->
+                            <div class="form-group">
+                                <label for="sandbox-dataset-select">Select Behavior Dataset Domain</label>
+                                <select id="sandbox-dataset-select">
+                                    <option value="students">Student Study Loops 🏫</option>
+                                    <option value="saas">SaaS Workspace Actions 💻</option>
+                                    <option value="ecommerce">E-Commerce Shopper Paths 🛍</option>
+                                    <option value="gaming">Gaming Skill Progressions 🎮</option>
+                                    <option value="custom">Upload Custom CSV/JSON File 📤</option>
+                                </select>
+                            </div>
+                            
+                            <div id="sandbox-upload-group" class="form-group hide">
+                                <label for="sandbox-dataset-file">Upload Behavior Records (.csv, .json)</label>
+                                <input type="file" id="sandbox-dataset-file" accept=".csv,.json">
+                            </div>
+
+                            <!-- Ingested preview container -->
+                            <div class="form-group">
+                                <label>Behavior Dataset Preview (First 5 Rows)</label>
+                                <div id="sandbox-preview-container" style="max-height: 120px; overflow-y: auto; background: rgba(255,255,255,0.7); border: 2px solid rgba(15,23,42,0.05); border-radius: 12px; font-size: 0.72rem; padding: 0.5rem;">
+                                    <div id="sandbox-preview-empty" class="text-muted" style="text-align: center; padding: 0.5rem 0;">No dataset loaded yet</div>
+                                    <table id="sandbox-preview-table" class="comparison-table hide" style="margin: 0; font-size: 0.7rem; width: 100%;">
+                                        <thead id="sandbox-preview-thead"></thead>
+                                        <tbody id="sandbox-preview-tbody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <form id="sandbox-config-form" style="border-top: 2px solid rgba(15,23,42,0.03); padding-top: 0.75rem;">
                                 <div class="form-group">
                                     <label for="sandbox-model-select">Select Algorithm</label>
                                     <select id="sandbox-model-select">
@@ -665,6 +694,29 @@
                             <div class="card-body">
                                 <div class="chart-wrapper">
                                     <canvas id="sandboxLossChart"></canvas>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Predictor Section -->
+                        <section class="dashboard-card card-sandbox-predict">
+                            <div class="card-header">
+                                <h2><i class="fa-solid fa-magic"></i> Live Action Predictor 🔮</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label>Enter Behavior Event Sequence</label>
+                                    <div class="input-action-group">
+                                        <input type="text" id="sandbox-seq-input" placeholder="e.g. login, view_item, add_to_cart">
+                                        <button class="btn btn-primary" id="btn-sandbox-predict" disabled>
+                                            <i class="fa-solid fa-bolt"></i> Predict Next
+                                        </button>
+                                    </div>
+                                    <span class="slider-help" style="margin-top: 0.1rem; display: block;">Separate events with commas. Model training unlocks inference.</span>
+                                </div>
+                                <div id="sandbox-predict-results" class="hide" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                    <h4 style="font-size: 0.8rem; font-weight: 800; color: var(--purple-neon); margin-top: 0.25rem;">Next Action Probabilities:</h4>
+                                    <div id="sandbox-predict-bars" style="display: flex; flex-direction: column; gap: 0.5rem;"></div>
                                 </div>
                             </div>
                         </section>
