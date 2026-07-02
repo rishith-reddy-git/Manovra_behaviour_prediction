@@ -5,7 +5,7 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from fastapi import FastAPI
-from api.routes import ingest, predict
+from api.routes import ingest, predict, student
 from api.routes.admin import router as admin_router
 from core.config import settings
 
@@ -18,6 +18,7 @@ app = FastAPI(
 app.include_router(ingest.router, prefix="/api/v1")
 app.include_router(predict.router, prefix="/api/v1")
 app.include_router(admin_router, prefix="/api/v1")
+app.include_router(student.router, prefix="/api/v1")
 
 # Serve static files from static directory
 from fastapi.staticfiles import StaticFiles
